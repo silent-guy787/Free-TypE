@@ -1,0 +1,3065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Free TypE</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20width=%22800px%22%20height=%22800px%22%20viewBox=%220%200%20100%20100%22%20xmlns=%22http://www.w3.org/2000/svg%22%20version=%221.1%22%3E%0A%3Cpath%20style=%22fill:%23333333%3B%22%20d=%22m%2066,14%20-18,16%200,9%202,1%202,-7%2014,-12%20z%20m%2028,13%20-19,16%200,8%207,3%20L%2063,72%2063,98%2085,74%2083,63%2097,49%20z%20M%2053,41%2033,58%2033,78%2039,61%2053,49%20z%22/%3E%0A%3Cpath%20style=%22fill:%23999999%3B%22%20d=%22M%2048,30%2026,20%2046,4.6%2066,14%20M%2075,43%2052,33%2071,17%2094,27%20M%2063,72%2039,61%2059,44%2082,54%20M%2033,58%2011,48%2030,31%2053,41%22/%3E%0A%3Cpath%20style=%22fill:%23cccccc%3B%22%20d=%22m%2050,40%202,-7%2023,10%200,8%20-16,-7%20-6,5%200,-8%20z%20m%20-32,1%208,-21%2022,10%200,9%20-18,-8%20z%20M%203.2,67%2011,48%20l%2022,10%200,20%206,-17%2024,11%200,26%20z%22/%3E%0A%3Cpath%20style=%22fill:none%3Bstroke:%23111111%3Bstroke-width:2%22%20d=%22m%2065,53%20c%20-2,-3%20-6,-3%20-7,-1%20-1,2%205,4%202,7%20-1,1%20-6,0%20-7,-3%20m%2019,-35%20-4,7%206,-1%200,5%208,-5%20m%20-35,-11%201,4%20m%203,-8%20c%20-2,-2%20-6,-2%20-9,1%20-2,2%200,5%204,5%203,0%207,-3%205,-6%20z%20m%20-23,29%206,3%20m%20-11,-1%2012,-4%20-3,9%22/%3E%0A%3Cpath%20style=%22fill:none%3Bstroke:%23222222%3Bstroke-width:1%22%20d=%22M%2018,41%2026,20%2046,4.6%2066,14%2066,21%20M%2032,82%2039,61%2059,44%2082,54%2085,74%2063,98%203.2,67%2011,48%2030,31%20l%2023,10%200,8%20m%20-3,-9%202,-7%2019,-16%2023,10%203,22%20-14,14%22/%3E%0A%3C/svg%3E">
+<style>
+  * { box-sizing: border-box; }
+
+  :root {
+    --background-color: #ffffff;
+    --sidebar-bg: rgba(255, 255, 255, 0.8);
+    --text-color: #18181b;
+    --border-color: #e4e4e7;
+    --hover-bg-color: #f4f4f5;
+    --accent-color: #3b82f6;
+    --sidebar-width: 260px;
+    --header-height: 60px;
+    --transition-speed: 0.3s;
+    --toolbar-bg: #ffffff;
+    --icon-color: #000000;
+  }
+
+.dark-mode, html.dark-mode {
+    --background-color: #151515;
+    --sidebar-bg: #111111;
+    --text-color: #fafafa;
+    --border-color: #27272a;
+    --hover-bg-color: #232323;
+    --toolbar-bg: #151515;
+    --icon-color: #ffffff;
+    --active-page-bg: #343434;
+  }
+  :root {
+    --active-page-bg: rgba(59, 130, 246, 0.1);
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+    transition: background-color var(--transition-speed);
+    display: flex;
+  }
+
+  /* Sidebar Styles */
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: calc(-1 * var(--sidebar-width));
+    width: var(--sidebar-width);
+    height: 100%;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    transition: left var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 80px 16px 20px 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-header {
+    color: #a1a1aa;
+    font-size: 11px;
+    /*text-transform: uppercase;*/
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-left: 12px;
+  }
+
+  /* Fixed Toggle Button */
+#sidebarToggle {
+    position: fixed;
+    top: 18px;
+    left: 20px;
+    width: 28px;
+    height: 28px;
+    z-index: 1100;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #sidebarToggle.shifted,
+  html.sb-open #sidebarToggle {
+    left: calc(var(--sidebar-width) - 78px);
+  }
+  html.sb-open #sidebar { left: 0; }
+  html.sb-open #appNameLabel { display: flex; }
+  html.sb-open #addMenuBtn { display: flex; }
+  html.no-anim *, html.no-anim *::before, html.no-anim *::after { transition: none !important; }
+  #sidebarToggle svg {
+    width: 18px;
+    height: 18px;
+  }
+  #sidebarToggle:hover { background: var(--hover-bg-color); }
+  #sidebarToggle svg { stroke: var(--icon-color); }
+
+  /* App name label (shown top-left when sidebar is open) */
+  #appNameLabel {
+    position: fixed;
+    top: 18px;
+    left: 20px;
+    height: 28px;
+    display: none;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-color);
+    cursor: pointer;
+    user-select: none;
+    z-index: 1100;
+  }
+  #appNameLabel.show { display: flex; }
+
+  /* Add (New Page / New Folder) dropdown button, sits right after the sidebar toggle */
+  #addMenuBtn {
+    position: fixed;
+    top: 18px;
+    left: calc(var(--sidebar-width) - 44px);
+    width: 28px;
+    height: 28px;
+    z-index: 1100;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #addMenuBtn.show { display: flex; }
+  #addMenuBtn:hover { background: var(--hover-bg-color); }
+  #addMenuBtn svg { width: 18px; height: 18px; stroke: var(--icon-color); }
+
+  #addMenuDropdown {
+    position: fixed;
+    top: 50px;
+    left: calc(var(--sidebar-width) - 44px);
+    z-index: 1101;
+  }
+
+  /* Buttons */
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    width: 28px;
+    height: 28px;
+  }
+  .btn-icon:hover { background: var(--hover-bg-color); }
+  .btn-icon svg { 
+    stroke: var(--icon-color);
+    width: 18px;
+    height: 18px;
+  }
+
+  #addPageBtn {
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 40px;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    transition: background 0.2s;
+  }
+  #addPageBtn:hover { background: var(--hover-bg-color); }
+
+  /* Page List */
+  #pagesList {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .page-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    font-size: 14px;
+    transition: all 0.2s;
+    group: relative;
+  }
+  .page-item:hover { background: var(--hover-bg-color); }
+  .page-item.active {
+    background-color: var(--active-page-bg);
+    color: var(--accent-color);
+    font-weight: 500;
+  }
+  .dark-mode .page-item.active {
+    color: var(--text-color);
+  }
+
+  .page-item .more-btn {
+    opacity: 0;
+    padding: 4px;
+    border-radius: 4px;
+    transition: opacity 0.2s;
+    background: transparent !important;
+  }
+  .page-item:hover .more-btn { opacity: 1; }
+
+  /* Header */
+  #header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    padding: 0 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    z-index: 900;
+    gap: 8px;
+  }
+
+  #wordCount {
+    font-size: 12px;
+    opacity: 0.6;
+    margin-right: 8px;
+  }
+
+  /* App Modal */
+  #appModalOverlay, #infoModalOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease;
+  }
+  #appModalOverlay.show, #infoModalOverlay.show { opacity: 1; pointer-events: auto; }
+  #appModal, #infoModal {
+    width: 100%;
+    max-width: 400px;
+    background: var(--toolbar-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 22px 22px 18px;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.25);
+    transform: translateY(8px) scale(0.97);
+    transition: transform 0.18s ease;
+  }
+  #appModalOverlay.show #appModal, #infoModalOverlay.show #infoModal { transform: none; }
+  #appModalTitle { margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+  #appModalMessage { margin: 0; font-size: 14px; line-height: 1.5; opacity: 0.75; word-break: break-word; }
+  #appModalInput {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--text-color);
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  #appModalInput:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+  }
+  #appModalActions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  .app-modal-btn {
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: none;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .app-modal-btn:hover { background: var(--hover-bg-color); }
+  .app-modal-btn.primary { background: var(--accent-color); border-color: var(--accent-color); color: #fff; }
+  .app-modal-btn.primary:hover { background: var(--accent-color); opacity: 0.9; }
+  .app-modal-btn.danger { background: #ef4444; border-color: #ef4444; color: #fff; }
+  .app-modal-btn.danger:hover { background: #ef4444; opacity: 0.9; }
+  .app-modal-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* Context Menu */
+  .context-menu {
+    position: fixed;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 6px;
+    width: 150px;
+    display: none;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    z-index: 2000;
+  }
+  .context-menu.show { display: block; }
+  .context-item {
+    background: none;
+    border: none;
+    padding: 8px 10px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--text-color);
+    border-radius: 6px;
+  }
+  .context-item:hover { background: var(--hover-bg-color); }
+
+  .context-menu-separator {
+    height: 1px;
+    background: var(--border-color);
+    margin: 6px 0;
+  }
+  
+  #downloadContextMenu {
+    width: 200px;
+  }
+
+  /* Main Content */
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: padding-left var(--transition-speed);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  #editor {
+    flex: 1;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 100px 40px 0 40px;
+    outline: none;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-y: visible;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .editor-spacer {
+    height: 80px;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .placeholder::before {
+    content: "";
+    color: #3D3D41 /*#a1a1aa*/;
+    pointer-events: none;
+    position: absolute;
+    top: 100px;
+    left: 40px;
+  }
+  
+  #editor {
+    position: relative;
+  }
+
+  /* Bottom Toolbar */
+  #toolbar {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--toolbar-bg);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 100px;
+    display: flex;
+    gap: 4px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    max-width: 95vw;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--border-color);
+  }
+
+  /* WebKit custom scrollbar (Chrome, Safari, Edge) */
+  #toolbar::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  #toolbar::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 10px;
+    margin: 0 10px;
+  }
+
+  #toolbar::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
+  }
+
+  #toolbar::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
+    opacity: 0.8;
+  }
+
+  /* Firefox custom scrollbar */
+  #toolbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-color) var(--border-color);
+  }
+
+  .toolbar-btn {
+    background: none;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .toolbar-btn:hover { background: var(--hover-bg-color); }
+.toolbar-btn.active { background: var(--hover-bg-color); color: var(--accent-color); }
+.toolbar-btn { display: flex; align-items: center; justify-content: center; padding: 6px 10px; }
+.toolbar-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+.font-size-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; display: block; }
+
+  .toolbar-btn.is-disabled { opacity: 0.35; cursor: default; }
+  .toolbar-btn.is-disabled:hover { background: none; }
+
+  .font-size-control {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 4px;
+  }
+  .font-size-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 16px;
+    font-weight: 500;
+    width: 24px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .font-size-btn:hover { background: var(--hover-bg-color); }
+  .font-size-display {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+    min-width: 28px;
+    text-align: center;
+    user-select: none;
+  }
+
+  /* Custom Tooltip */
+  #custom-tooltip {
+    position: fixed;
+    background: #18181b;
+    color: #fafafa;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+
+#custom-tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 4px 4px 0 4px;
+    border-style: solid;
+    border-color: #18181b transparent transparent transparent;
+  }
+  #custom-tooltip.tooltip-below::after {
+    bottom: auto;
+    top: -4px;
+    border-width: 0 4px 4px 4px;
+    border-color: transparent transparent #18181b transparent;
+  }
+  .dark-mode #custom-tooltip.tooltip-below::after {
+    border-color: transparent transparent #fafafa transparent;
+  }
+
+  .dark-mode #custom-tooltip {
+    background: #fafafa;
+    color: #18181b;
+  }
+  .dark-mode #custom-tooltip::after {
+    border-color: #fafafa transparent transparent transparent;
+  }
+
+  /* Save/Copy Alerts */
+  #toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #18181b;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 3000;
+  }
+  .dark-mode #toast { background: #fafafa; color: #18181b; }
+
+  /* Menu Dropdown */
+  #menuDropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 8px;
+    min-width: 180px;
+    display: none;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  }
+  #menuDropdown.show { display: block; }
+  .menu-item {
+    background: none;
+    border: none;
+    padding: 10px 12px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-color);
+    border-radius: 8px;
+  }
+
+.menu-item:hover { background: var(--hover-bg-color); }
+
+  .menu-item-nightlight {
+    cursor: default;
+    user-select: none;
+    justify-content: space-between;
+  }
+  .nightlight-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nl-switch {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+  .nl-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .nl-switch-track {
+    position: absolute;
+    inset: 0;
+    background: var(--border-color);
+    border-radius: 999px;
+    transition: background 0.2s;
+  }
+  .nl-switch-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+  }
+  .nl-switch input:checked ~ .nl-switch-track {
+    background: #f97316;
+  }
+  .nl-switch input:checked ~ .nl-switch-track .nl-switch-thumb {
+    transform: translateX(13px);
+  }
+  .nightlight-slider {
+    width: 64px;
+    height: 3px;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 4px;
+    background: var(--border-color);
+    outline: none;
+    cursor: pointer;
+    accent-color: #f97316;
+  }
+  .nightlight-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #f97316;
+    cursor: pointer;
+  }
+  .nightlight-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #f97316;
+    cursor: pointer;
+    border: none;
+  }
+
+  /* Typeface picker */
+  .typeface-check { opacity: 0; font-size: 13px; color: var(--accent-color); }
+  .typeface-option.active .typeface-check { opacity: 1; }
+
+#night-light-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    background: transparent;
+    transition: background 0.4s ease;
+  }
+
+  /* Storage Indicator */
+#storageIndicator {
+    position: fixed;
+    bottom: 14px;
+    left: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-color);
+    opacity: 0.45;
+    pointer-events: none;
+    z-index: 800;
+    letter-spacing: 0.01em;
+    transition: opacity 0.2s;
+    line-height: 1.5;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  #storageIndicator:hover { opacity: 0.75; }
+  #storageIndicator svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    fill: currentColor;
+  }
+
+  .menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .menu-shortcut {
+    font-size: 11px;
+    color: #a1a1aa;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    white-space: nowrap;
+  }
+  .menu-item:hover .menu-shortcut { opacity: 1; }
+
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: padding-left var(--transition-speed);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  .editor-spacer {
+    height: 80px;
+    width: 100%;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+
+html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom Scrollbar — hidden unless actively scrolling */
+  #main::-webkit-scrollbar {
+    width: 4px;
+  }
+  #main::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #main::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 999px;
+    transition: background 0.3s ease;
+  }
+  #main.scrolling::-webkit-scrollbar-thumb {
+    background: #71717a;
+  }
+  #main.scrolling::-webkit-scrollbar-thumb:hover {
+    background: #a1a1aa;
+  }
+  #main {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
+  }
+  #main.scrolling {
+    scrollbar-color: #71717a transparent;
+  }
+
+  #main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: padding-left var(--transition-speed);
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+
+  /* Folder tree */
+  .folder-item { gap: 6px; }
+  .folder-add-page-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.55;
+    font-size: 12.5px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .folder-add-page-btn:hover { background: var(--hover-bg-color); opacity: 1; }
+
+  /* Editor typeface options (typing area only) */
+  #editor.font-serif { font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; }
+  #editor.font-mono { font-family: 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, 'Liberation Mono', monospace; }
+  #editor.font-sans { font-family: sans-serif; }
+  #editor.font-cursive { font-family: cursive; }
+  #editor.font-fantasy { font-family: fantasy; }
+  #editor.font-helvetica { font-family: Helvetica, Arial, sans-serif; }
+  #editor.font-verdana { font-family: Verdana, Geneva, sans-serif; }
+  #editor.font-tahoma { font-family: Tahoma, Geneva, sans-serif; }
+  #editor.font-trebuchet { font-family: 'Trebuchet MS', Helvetica, sans-serif; }
+  #editor.font-impact { font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; }
+  #editor.font-times { font-family: 'Times New Roman', Times, serif; }
+  #editor.font-georgia { font-family: Georgia, serif; }
+  #editor.font-garamond { font-family: Garamond, 'EB Garamond', 'Times New Roman', serif; }
+  #editor.font-palatino { font-family: Palatino, 'Palatino Linotype', 'Book Antiqua', serif; }
+  #editor.font-courier { font-family: 'Courier New', Courier, monospace; }
+  #editor.font-lucida { font-family: 'Lucida Console', Monaco, monospace; }
+  #menuTypefaceView { max-height: calc(100vh - 90px); overflow-y: auto; }
+  #menuTypefaceView #typefaceBackBtn { position: sticky; top: 0; z-index: 1; background: var(--toolbar-bg); }
+
+
+  /* ── Sidebar search ── */
+  .sidebar-search { position: relative; margin-bottom: 12px; flex-shrink: 0; }
+  .sidebar-search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; opacity: 0.5; pointer-events: none; }
+  #sidebarSearch {
+    width: 100%; padding: 8px 12px 8px 32px; font: inherit; font-size: 13px;
+    color: var(--text-color); background: var(--background-color);
+    border: 1px solid var(--border-color); border-radius: 40px; outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  #sidebarSearch:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+  .sidebar-empty { font-size: 12.5px; opacity: 0.5; padding: 8px 12px; }
+  .sidebar-section-label { margin-top: 4px; }
+  .item-sub { font-size: 11px; opacity: 0.5; margin-left: 6px; font-weight: 400; flex-shrink: 0; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pin-mark { width: 12px; height: 12px; flex-shrink: 0; opacity: 0.45; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-left: 4px; }
+  .folder-item.colored { background: var(--ftint); }
+  .folder-item.colored:hover { background: var(--ftint-h); }
+
+  /* ── Color popover ── */
+  .color-popover {
+    position: fixed; z-index: 2100; display: none; padding: 12px;
+    background: var(--toolbar-bg); border: 1px solid var(--border-color);
+    border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.12); width: 176px;
+  }
+  .color-popover.show { display: block; }
+  .swatch-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .swatch {
+    width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent;
+    cursor: pointer; padding: 0; transition: transform 0.12s;
+  }
+  .swatch:hover { transform: scale(1.12); }
+  .swatch.selected { border-color: var(--text-color); box-shadow: 0 0 0 2px var(--toolbar-bg) inset; }
+  #removeColorBtn {
+    margin-top: 10px; width: 100%; background: none; border: 1px solid var(--border-color);
+    color: var(--text-color); font-size: 12px; padding: 6px; border-radius: 8px; cursor: pointer;
+  }
+  #removeColorBtn:hover { background: var(--hover-bg-color); }
+
+  /* ── Info modal ── */
+  #infoModal { max-width: 380px; }
+  .info-row { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { opacity: 0.6; flex-shrink: 0; }
+  .info-value { text-align: right; word-break: break-word; font-weight: 500; }
+  .modal-actions { display: flex; justify-content: flex-end; margin-top: 16px; }
+
+  /* ── Find & replace ── */
+  #findPanel {
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    width: min(480px, calc(100vw - 24px)); z-index: 1200; display: none;
+    background: var(--toolbar-bg); border: 1px solid var(--border-color);
+    border-radius: 14px; padding: 10px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.18);
+  }
+  #findPanel.show { display: block; }
+  .find-row { display: flex; align-items: center; gap: 6px; }
+  .find-row + .find-row { margin-top: 8px; }
+  .find-row input {
+    flex: 1; min-width: 0; padding: 7px 10px; font: inherit; font-size: 13px;
+    color: var(--text-color); background: var(--background-color);
+    border: 1px solid var(--border-color); border-radius: 8px; outline: none;
+  }
+  .find-row input:focus { border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+  .find-act {
+    font: inherit; font-size: 12.5px; font-weight: 500; padding: 7px 12px; min-width: 70px;
+    border-radius: 8px; border: 1px solid var(--border-color); background: none;
+    color: var(--text-color); cursor: pointer; flex-shrink: 0;
+  }
+  .find-act:hover { background: var(--hover-bg-color); }
+  #findCount { font-size: 12px; opacity: 0.7; min-width: 44px; text-align: center; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  #findPanel .btn-icon { width: 26px; height: 26px; flex-shrink: 0; }
+  #findPanel .btn-icon svg { width: 16px; height: 16px; fill: none; }
+  #findBtn.active { background: var(--hover-bg-color); }
+  ::highlight(ft-find) { background-color: rgba(250, 204, 21, 0.5); color: inherit; }
+  ::highlight(ft-current) { background-color: #f97316; color: #fff; }
+</style>
+<script>
+  try {
+    if (localStorage.getItem('nb_sidebar') === '1') document.documentElement.classList.add('sb-open', 'no-anim');
+  } catch(e) {}
+</script>
+<script type="module">
+  try {
+    if (localStorage.getItem('nb_dark') === '1') {
+      document.documentElement.classList.add('dark-mode');
+    }
+  } catch(e) {}
+</script>
+</head>
+<body>
+
+<button id="sidebarToggle">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+    <line x1="9" y1="3" x2="9" y2="21" />
+  </svg>
+</button>
+
+<span id="appNameLabel">Free TypE</span>
+
+<button id="addMenuBtn">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="12" y1="5" x2="12" y2="19" />
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+</button>
+<div id="addMenuDropdown" class="context-menu">
+  <button class="context-item" id="newPageMenuBtn">New Page</button>
+  <button class="context-item" id="newFolderMenuBtn">New Folder</button>
+</div>
+
+<div id="sidebar">
+  <div class="sidebar-search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="sidebarSearch" type="text" placeholder="Search pages and folders" autocomplete="off" spellcheck="false" />
+  </div>
+  <div id="pagesList"></div>
+</div>
+
+<div id="header">
+  <div id="wordCount">0 words, 0 characters</div>
+  
+  <!-- Find & Replace Button -->
+  <button class="btn-icon" id="findBtn" title="Find and Replace">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="7"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+      <path d="M8.5 11h5"></path>
+    </svg>
+  </button>
+
+  <!-- Copy Button -->
+  <button class="btn-icon" id="copyBtn" title="Copy Content">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+    </svg>
+  </button>
+
+  <!-- Download Button -->
+  <button class="btn-icon" id="downloadBtn" title="Download Page">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  </button>
+
+  <!-- Share Button -->
+  <button class="btn-icon" id="shareBtn" title="Share Page">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8" />
+      <polyline points="16 6 12 2 8 6" />
+      <line x1="12" y1="2" x2="12" y2="15" />
+    </svg>
+  </button>
+
+  <button class="btn-icon" id="menuToggle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>
+    </svg>
+  </button>
+
+  <div id="menuDropdown">
+    <div id="menuMainView">
+<button class="menu-item" id="fullscreenBtn">Full Screen <span class="menu-shortcut">Ctrl+Shift+F</span></button>
+    <button class="menu-item" id="toggleCounterBtn">Hide Counter <span class="menu-shortcut">Ctrl+Shift+Y</span></button>
+    <button class="menu-item" id="toggleToolbarBtn">Hide Toolbar <span class="menu-shortcut">Ctrl+Shift+L</span></button>
+<button class="menu-item" id="darkModeBtn">Dark Mode <span class="menu-shortcut">Ctrl+Shift+M</span></button>
+<button class="menu-item" id="toggleSpellcheckBtn">Enable Spell Check <span class="menu-shortcut">Ctrl+Shift+S</span></button>
+<div class="menu-item menu-item-nightlight" id="nightLightRow">
+      <span id="nightLightLabel">Night Light</span>
+      <div class="nightlight-controls">
+        <span class="nl-switch">
+          <input type="checkbox" id="nightLightToggle">
+          <span class="nl-switch-track"><span class="nl-switch-thumb"></span></span>
+        </span>
+        <input type="range" id="nightLightSlider" min="0" max="100" value="40" class="nightlight-slider" />
+      </div>
+    </div>
+    <button class="menu-item" id="typefaceBtn">Typeface <span class="menu-shortcut" id="typefaceCurrentLabel">Default ›</span></button>
+    <button class="menu-item" id="toggleStorageBtn">Hide Storage <span class="menu-shortcut"></span></button>
+    </div>
+    <div id="menuTypefaceView" style="display:none;">
+      <button class="menu-item" id="typefaceBackBtn">‹ Back</button>
+      <button class="menu-item typeface-option" data-face="default" data-label="Default">Default <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="serif" data-label="Serif">Serif <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="mono" data-label="Mono">Mono <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="sans" data-label="Sans-serif" style="font-family: sans-serif;">Sans-serif <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="cursive" data-label="Cursive" style="font-family: cursive;">Cursive <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="fantasy" data-label="Fantasy" style="font-family: fantasy;">Fantasy <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="helvetica" data-label="Helvetica" style="font-family: Helvetica, Arial, sans-serif;">Helvetica <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="verdana" data-label="Verdana" style="font-family: Verdana, Geneva, sans-serif;">Verdana <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="tahoma" data-label="Tahoma" style="font-family: Tahoma, Geneva, sans-serif;">Tahoma <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="trebuchet" data-label="Trebuchet MS" style="font-family: 'Trebuchet MS', Helvetica, sans-serif;">Trebuchet MS <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="impact" data-label="Impact" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">Impact <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="times" data-label="Times New Roman" style="font-family: 'Times New Roman', Times, serif;">Times New Roman <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="georgia" data-label="Georgia" style="font-family: Georgia, serif;">Georgia <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="garamond" data-label="Garamond" style="font-family: Garamond, 'EB Garamond', 'Times New Roman', serif;">Garamond <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="palatino" data-label="Palatino" style="font-family: Palatino, 'Palatino Linotype', 'Book Antiqua', serif;">Palatino <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="courier" data-label="Courier New" style="font-family: 'Courier New', Courier, monospace;">Courier New <span class="menu-shortcut typeface-check">✓</span></button>
+      <button class="menu-item typeface-option" data-face="lucida" data-label="Lucida Console" style="font-family: 'Lucida Console', Monaco, monospace;">Lucida Console <span class="menu-shortcut typeface-check">✓</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="editor" contenteditable="true" class="placeholder"></div>
+  <div class="editor-spacer"></div>
+</div>
+
+<div id="toolbar">
+  <button class="toolbar-btn is-disabled" id="undoBtn" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+  <button class="toolbar-btn is-disabled" id="redoBtn" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg></button>
+  <div style="width:1px; background:var(--border-color); margin: 0 4px;"></div>
+<div class="font-size-control">
+    <button class="font-size-btn" id="fontDecrBtn" title="Decrease font size"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+    <span class="font-size-display" id="fontSizeDisplay">16</span>
+    <button class="font-size-btn" id="fontIncrBtn" title="Increase font size"><svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+  </div>
+  <div style="width:1px; background:var(--border-color); margin: 0 4px;"></div>
+  <button class="toolbar-btn" onclick="execCmd('bold')" title="Bold"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('italic')" title="Italic"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 4h-9"/><path d="M14 20H5"/><path d="M15 4 9 20"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('underline')" title="Underline"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><path d="M4 20h16"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('strikeThrough')" title="Strikethrough"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4H9a3 3 0 0 0-2.83 4"/><path d="M14 12a4 4 0 0 1 0 8H6"/><path d="M4 12h16"/></svg></button>
+  <div style="width:1px; background:var(--border-color); margin: 0 4px;"></div>
+  <button class="toolbar-btn" onclick="execCmd('justifyLeft')" title="Align Left"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 5H3"/><path d="M15 12H3"/><path d="M17 19H3"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('justifyCenter')" title="Align Center"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 5H3"/><path d="M17 12H7"/><path d="M19 19H5"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('justifyRight')" title="Align Right"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 5H3"/><path d="M21 12H9"/><path d="M21 19H7"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('justifyFull')" title="Justify"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 5H3"/><path d="M21 12H3"/><path d="M21 19H3"/></svg></button>
+  <div style="width:1px; background:var(--border-color); margin: 0 4px;"></div>
+  <button class="toolbar-btn" onclick="execCmd('insertHorizontalRule')" title="Horizontal Line"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h18"/><path d="M8 6h8" opacity=".45"/><path d="M8 18h8" opacity=".45"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('insertUnorderedList')" title="Bullet List"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 6h12"/><path d="M9 12h12"/><path d="M9 18h12"/><path d="M3.5 6h.01"/><path d="M3.5 12h.01"/><path d="M3.5 18h.01"/></svg></button>
+  <button class="toolbar-btn" onclick="execCmd('insertOrderedList')" title="Numbered List"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 6h10"/><path d="M11 12h10"/><path d="M11 18h10"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button>
+</div>
+
+<div id="pageContextMenu" class="context-menu">
+  <button class="context-item" id="renamePageBtn">Rename</button>
+  <button class="context-item" id="pinItemBtn">Pin</button>
+  <button class="context-item" id="infoItemBtn">Info</button>
+  <button class="context-item" id="colorFolderBtn" style="display:none;">Color code</button>
+  <div class="context-menu-separator"></div>
+  <button class="context-item" id="deletePageBtn" style="color: #ef4444;">Delete</button>
+</div>
+
+<div id="colorPopover" class="color-popover">
+  <div class="swatch-grid"><button class="swatch" data-color="#ef4444" style="background:#ef4444" title="Red"></button><button class="swatch" data-color="#f97316" style="background:#f97316" title="Orange"></button><button class="swatch" data-color="#eab308" style="background:#eab308" title="Yellow"></button><button class="swatch" data-color="#22c55e" style="background:#22c55e" title="Green"></button><button class="swatch" data-color="#14b8a6" style="background:#14b8a6" title="Teal"></button><button class="swatch" data-color="#3b82f6" style="background:#3b82f6" title="Blue"></button><button class="swatch" data-color="#6366f1" style="background:#6366f1" title="Indigo"></button><button class="swatch" data-color="#a855f7" style="background:#a855f7" title="Purple"></button><button class="swatch" data-color="#ec4899" style="background:#ec4899" title="Pink"></button><button class="swatch" data-color="#78716c" style="background:#78716c" title="Gray"></button></div>
+  <button id="removeColorBtn">Remove color</button>
+</div>
+
+<div id="infoModalOverlay" aria-hidden="true">
+  <div id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+    <h3 id="infoModalTitle" style="margin:0 0 10px;font-size:16px;font-weight:600;"></h3>
+    <div id="infoModalBody"></div>
+    <div class="modal-actions"><button class="app-modal-btn primary" id="infoModalClose">Close</button></div>
+  </div>
+</div>
+
+<div id="findPanel" role="search">
+  <div class="find-row">
+    <input id="findInput" type="text" placeholder="Find" autocomplete="off" spellcheck="false" />
+    <button class="find-act" id="findGoBtn">Find</button>
+    <span id="findCount">0/0</span>
+    <button class="btn-icon" id="findPrevBtn" title="Previous match"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg></button>
+    <button class="btn-icon" id="findNextBtn" title="Next match"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="btn-icon" id="findCloseBtn" title="Close"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="find-row">
+    <input id="replaceInput" type="text" placeholder="Replace with" autocomplete="off" spellcheck="false" />
+    <button class="find-act" id="replaceGoBtn">Replace</button>
+  </div>
+</div>
+
+<div id="downloadContextMenu" class="context-menu">
+  <button class="context-item" id="downloadTxtBtn">Download as Text (.txt)</button>
+  <button class="context-item" id="downloadMdBtn">Download as Markdown (.md)</button>
+  <button class="context-item" id="downloadRtfBtn">Download as Rich Text (.rtf)</button>
+<button class="context-item" id="downloadHtmlBtn">Download as HTML (.html)</button>
+  <div class="context-menu-separator"></div>
+  <button class="context-item" id="exportBackupBtn">Export a Backup (JSON)</button>
+  <button class="context-item" id="importBackupBtn">Import a Backup (JSON)</button>
+</div>
+
+<div id="appModalOverlay" aria-hidden="true">
+  <div id="appModal" role="dialog" aria-modal="true" aria-labelledby="appModalTitle">
+    <h3 id="appModalTitle"></h3>
+    <p id="appModalMessage"></p>
+    <input id="appModalInput" type="text" autocomplete="off" spellcheck="false" />
+    <div id="appModalActions">
+      <button class="app-modal-btn" id="appModalCancel">Cancel</button>
+      <button class="app-modal-btn primary" id="appModalOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast">Message</div>
+<div id="night-light-overlay"></div>
+<div id="storageIndicator" title="IndexedDB storage usage"><span id="storageText">— / —</span></div>
+<div id="custom-tooltip"></div>
+
+<script>
+const Utils = {
+    generateUUID: function () {
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+};
+
+</script>
+<script>
+  (function(){
+    // DB & State
+    const DB_NAME = 'NotebookDB_v2';
+    const DB_VERSION = 2;
+    const STORE_NAME = 'state';       // 'appState' -> settings + page tree (no page bodies)
+    const CONTENT_STORE = 'content';  // <pageId> -> page HTML, one record per page
+    let db = null;
+    
+    let pages = [];
+    let currentPageId = null;
+    let isDarkMode = false;
+    let isSidebarOpen = false;
+    let contextItemId = null;
+    let isCounterVisible = true;
+    let isToolbarVisible = true;
+    let isSpellcheckEnabled = false;
+    let isNightLightEnabled = false;
+    let nightLightIntensity = 40;
+    let isStorageVisible = true;
+    let pageCounter = 1;
+    let folderCounter = 1;
+    let editorTypeface = 'default';
+    let searchQuery = '';
+    let findMatches = [], findIdx = -1, findLastQuery = '';
+
+    // ── Tree helpers ──────────────────────────────────────────────
+    function findItemById(list, id) {
+      for (const item of list) {
+        if (item.id === id) return item;
+        if (item.type === 'folder' && item.children) {
+          const found = findItemById(item.children, id);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+    function findParentList(list, id, parentList) {
+      for (const item of list) {
+        if (item.id === id) return list;
+        if (item.type === 'folder' && item.children) {
+          const found = findParentList(item.children, id);
+          if (found) return found;
+        }
+      }
+      return null;
+    }
+    function flattenPages(list) {
+      let out = [];
+      for (const item of list) {
+        if (item.type === 'folder') {
+          if (item.children) out = out.concat(flattenPages(item.children));
+        } else {
+          out.push(item);
+        }
+      }
+      return out;
+    }
+    function getCurrentPage() {
+      return findItemById(pages, currentPageId);
+    }
+    // Migrate legacy data (no id/type, flat pages array, index-based) to the new model
+    function ensureMeta(list, now) {
+      let changed = false;
+      (list || []).forEach(it => {
+        if (!it.createdAt) { it.createdAt = now; changed = true; }
+        if (!it.updatedAt) { it.updatedAt = it.createdAt; changed = true; }
+        if (it.type === 'folder' && it.children) { if (ensureMeta(it.children, now)) changed = true; }
+      });
+      return changed;
+    }
+    function migratePages() {
+      let changed = false;
+      pages.forEach(p => {
+        if (!p.id) { p.id = Utils.generateUUID(); changed = true; }
+        if (!p.type) { p.type = 'page'; changed = true; }
+      });
+      if (pages.length === 0) {
+        pages.push({ id: Utils.generateUUID(), type: 'page', name: 'Page 1', content: '' });
+        changed = true;
+      }
+      if (ensureMeta(pages, Date.now())) changed = true;
+      return changed;
+    }
+    function findParentFolder(list, id, parent) {
+      for (const item of list) {
+        if (item.id === id) return parent || null;
+        if (item.type === 'folder' && item.children) {
+          const f = findParentFolder(item.children, id, item);
+          if (f !== undefined) return f;
+        }
+      }
+      return undefined;
+    }
+    function touchFolder(folder) { if (folder) folder.updatedAt = Date.now(); }
+    function markEdited() { const p = getCurrentPage(); if (p) p.updatedAt = Date.now(); }
+    function folderPath(id) {
+      const names = [];
+      let f = findParentFolder(pages, id, null);
+      while (f) { names.unshift(f.name); f = findParentFolder(pages, f.id, null); }
+      return names;
+    }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function hexToRgba(hex, a) {
+      const n = parseInt(hex.slice(1), 16);
+      return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+    }
+    function countText(text) {
+      const t = (text || '').replace(/\u200B/g, '');
+      const words = t.split(/\s+/).filter(Boolean).length;
+      const chars = t.replace(/[\n\r]/g, '').trim().length;
+      return { words, chars };
+    }
+
+
+    const editor = document.getElementById('editor');
+    const pagesList = document.getElementById('pagesList');
+    const toast = document.getElementById('toast');
+
+    // ── PERSISTENCE (IndexedDB) ─────────────────────────────────────
+    // • Each page body is its own record, so typing only rewrites the page being edited
+    //   (the old design re-wrote every page on every change).
+    // • Writes are debounced (with a max wait) and flushed when the tab is hidden or closed.
+    // • Everything that changed is written in ONE transaction, so it's all-or-nothing.
+    // • Old single-record data is migrated automatically on first load.
+    // • If storage can't be opened/read, autosave pauses instead of overwriting good data.
+    const SAVE_DEBOUNCE = 500;     // ms of quiet before writing
+    const SAVE_MAX_WAIT = 3000;    // never hold changes longer than this
+    let dbMode = 'none';           // 'idb' | 'memory'
+    let loadOK = false;            // true once saved data was read (or storage is intentionally absent)
+    let needsMigrationSave = false;
+    let storagePersisted = null;
+    let dirty = false, saveTimer = null, maxTimer = null, retryTimer = null, failCount = 0;
+    let writeChain = Promise.resolve();
+    const savedContent = new Map();        // pageId -> content last written
+    const knownContentIds = new Set();     // ids that have a content record on disk
+    let savedMetaJSON = null;
+    const tabId = Utils.generateUUID();
+    let syncChannel = null;
+    let lastSyncWarn = 0;
+
+    function initDB() {
+      return new Promise((resolve) => {
+        if (!('indexedDB' in window) || !window.indexedDB) { dbMode = 'memory'; return resolve(); }
+        let request;
+        try { request = indexedDB.open(DB_NAME, DB_VERSION); }
+        catch (e) { dbMode = 'memory'; return resolve(); }
+        request.onupgradeneeded = (e) => {
+          const d = e.target.result;
+          if (!d.objectStoreNames.contains(STORE_NAME)) d.createObjectStore(STORE_NAME);
+          if (!d.objectStoreNames.contains(CONTENT_STORE)) d.createObjectStore(CONTENT_STORE);
+        };
+        request.onsuccess = (e) => {
+          db = e.target.result;
+          dbMode = 'idb';
+          // Another tab wants to upgrade/delete the database: let go so it isn't blocked.
+          db.onversionchange = () => {
+            try { db.close(); } catch (_) {}
+            db = null; loadOK = false;
+            showToast('Notebook updated in another tab. Please reload.');
+          };
+          db.onclose = () => { db = null; };
+          resolve();
+        };
+        request.onblocked = () => showToast('Close other Free TypE tabs to finish updating storage.');
+        request.onerror = () => { dbMode = 'memory'; resolve(); };
+      });
+    }
+
+    async function requestPersistence() {
+      try {
+        if (navigator.storage && navigator.storage.persist) {
+          storagePersisted = (await navigator.storage.persisted()) || (await navigator.storage.persist());
+        }
+      } catch (_) {}
+    }
+
+    function isFolderItem(it) { return it && it.type === 'folder'; }
+    function stripContent(list) {
+      return (list || []).map(it => {
+        if (isFolderItem(it)) return Object.assign({}, it, { children: stripContent(it.children) });
+        const copy = Object.assign({}, it);
+        delete copy.content;
+        return copy;
+      });
+    }
+    function buildMeta() {
+      return {
+        schemaVersion: 2,
+        pages: stripContent(pages),
+        currentPageId, isDarkMode, isCounterVisible, isToolbarVisible, isSpellcheckEnabled,
+        isNightLightEnabled, nightLightIntensity, isStorageVisible, pageCounter, folderCounter, editorTypeface, isSidebarOpen
+      };
+    }
+
+    const ZW_SPAN = /<span[^>]*>\u200B<\/span>/g;
+    // Copy the editor into the current page (zero-width anchor spans are dropped from the saved copy only)
+    function captureEditor() {
+      const curP = getCurrentPage();
+      if (!curP) return;
+      const html = editor.innerHTML;
+      curP.content = html.indexOf('\u200B') === -1 ? html : html.replace(ZW_SPAN, '');
+    }
+
+    // Called after every change: capture immediately, write to disk shortly after.
+    function saveState() {
+      if (!loadOK) return Promise.resolve();
+      captureEditor();
+      dirty = true;
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(flushSave, SAVE_DEBOUNCE);
+      if (!maxTimer) maxTimer = setTimeout(flushSave, SAVE_MAX_WAIT);
+      return Promise.resolve();
+    }
+    // Capture + write right now (used by backup export/import)
+    async function saveNow() { await saveState(); return flushSave(); }
+
+    async function writeNow() {
+      if (!db) return;
+      const metaObj = buildMeta();
+      const metaJSON = JSON.stringify(metaObj);
+      const ids = new Set();
+      const changed = [];
+      flattenPages(pages).forEach(pg => {
+        ids.add(pg.id);
+        const c = pg.content || '';
+        if (savedContent.get(pg.id) !== c) changed.push([pg.id, c]);
+      });
+      const removed = [...knownContentIds].filter(id => !ids.has(id));
+      const metaChanged = metaJSON !== savedMetaJSON;
+      if (!changed.length && !removed.length && !metaChanged) return;
+
+      await new Promise((resolve, reject) => {
+        const tx = db.transaction([STORE_NAME, CONTENT_STORE], 'readwrite');
+        const cs = tx.objectStore(CONTENT_STORE);
+        changed.forEach(([id, c]) => cs.put(c, id));
+        removed.forEach(id => cs.delete(id));
+        if (metaChanged) tx.objectStore(STORE_NAME).put(metaObj, 'appState');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error || new Error('Transaction aborted'));
+      });
+
+      changed.forEach(([id, c]) => { savedContent.set(id, c); knownContentIds.add(id); });
+      removed.forEach(id => { savedContent.delete(id); knownContentIds.delete(id); });
+      savedMetaJSON = metaJSON;
+      try { if (syncChannel) syncChannel.postMessage({ tab: tabId }); } catch (_) {}
+    }
+
+    function flushSave() {
+      clearTimeout(saveTimer); clearTimeout(maxTimer);
+      saveTimer = maxTimer = null;
+      if (!dirty) return writeChain;
+      dirty = false;
+      writeChain = writeChain.then(writeNow).then(() => { failCount = 0; }).catch(err => {
+        console.error('Save failed:', err);
+        dirty = true;
+        failCount++;
+        if (err && err.name === 'QuotaExceededError') showToast('Storage is full. Export a backup to keep your notes safe.');
+        else if (failCount === 1) showToast('Couldn\u2019t save. Retrying\u2026');
+        clearTimeout(retryTimer);
+        retryTimer = setTimeout(flushSave, Math.min(30000, 1000 * Math.pow(2, failCount)));
+      });
+      return writeChain;
+    }
+
+    function flushOnExit() {
+      if (loadOK) { captureEditor(); dirty = true; }
+      flushSave();
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') flushOnExit();
+    });
+    window.addEventListener('pagehide', flushOnExit);
+
+    try {
+      if ('BroadcastChannel' in window) {
+        syncChannel = new BroadcastChannel('freetype_sync');
+        syncChannel.onmessage = (e) => {
+          if (e.data && e.data.tab !== tabId && Date.now() - lastSyncWarn > 30000) {
+            lastSyncWarn = Date.now();
+            showToast('Notebook changed in another tab. Reload to see the latest.');
+          }
+        };
+      }
+    } catch (_) {}
+
+    async function loadState() {
+      if (dbMode !== 'idb' || !db) { loadOK = true; return null; }   // memory mode: nothing to read
+      try {
+        const [meta, keys, vals] = await new Promise((resolve, reject) => {
+          const tx = db.transaction([STORE_NAME, CONTENT_STORE], 'readonly');
+          const r1 = tx.objectStore(STORE_NAME).get('appState');
+          const r2 = tx.objectStore(CONTENT_STORE).getAllKeys();
+          const r3 = tx.objectStore(CONTENT_STORE).getAll();
+          tx.oncomplete = () => resolve([r1.result, r2.result, r3.result]);
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error || new Error('Read aborted'));
+        });
+        loadOK = true;
+        if (!meta) return null;
+
+        const bodies = new Map();
+        keys.forEach((k, i) => { bodies.set(k, vals[i]); knownContentIds.add(k); });
+        const legacy = meta.schemaVersion !== 2;     // v1: page bodies were stored inline
+        const attach = (list) => (list || []).forEach(it => {
+          if (isFolderItem(it)) { attach(it.children); return; }
+          if (legacy) { if (typeof it.content !== 'string') it.content = ''; }
+          else { it.content = bodies.has(it.id) ? bodies.get(it.id) : ''; savedContent.set(it.id, it.content); }
+        });
+        attach(meta.pages);
+        if (legacy) needsMigrationSave = true;       // rewrite in the new layout after startup
+        return meta;
+      } catch (err) {
+        console.error('Load failed:', err);
+        loadOK = false;   // keep autosave OFF so a blank state never overwrites real data
+        showToast('Couldn\u2019t read saved notes. Autosave is paused to protect them. Try reloading.');
+        return null;
+      }
+    }
+    // ── END PERSISTENCE ─────────────────────────────────────────────
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.opacity = '1';
+      setTimeout(() => toast.style.opacity = '0', 2000);
+    }
+
+    // Command wrapper
+    window.execCmd = (cmd) => {
+      document.execCommand(cmd, false, null);
+      editor.focus();
+      markEdited();
+      recordHistory(null, true);
+      saveState();
+    };
+
+    function updateWordCount() {
+      const { words, chars } = countText(editor.innerText || '');
+      document.getElementById('wordCount').textContent = `${words} words, ${chars} characters`;
+    }
+
+    const DOTS_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>';
+    const PIN_SVG = '<svg class="pin-mark" viewBox="0 0 24 24"><path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/></svg>';
+
+    // ctx: 'tree' (normal), 'pinned' (Pinned section) or 'search' (flat search results)
+    function renderItemList(list, container, depth, ctx) {
+      ctx = ctx || 'tree';
+      list.forEach((item) => {
+        const pinMark = item.pinned && ctx !== 'pinned' ? PIN_SVG : '';
+        const sub = ctx === 'search' ? folderPath(item.id).join(' / ') : '';
+        const subHtml = sub ? `<span class="item-sub">${escapeHtml(sub)}</span>` : '';
+        if (item.type === 'folder') {
+          const isOpen = ctx === 'pinned' ? !!item.pinOpen : !!item.open;
+          const div = document.createElement('div');
+          div.className = 'page-item folder-item';
+          div.style.paddingLeft = (12 + depth * 16) + 'px';
+          if (item.color) {
+            div.classList.add('colored');
+            div.style.setProperty('--ftint', hexToRgba(item.color, 0.2));
+            div.style.setProperty('--ftint-h', hexToRgba(item.color, 0.32));
+          }
+          div.innerHTML = `
+            <svg class="folder-caret" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; transform:rotate(${isOpen && ctx !== 'search' ? '90deg' : '0deg'}); transition:transform .15s;"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path></svg>
+            <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(item.name)}</span>
+            ${subHtml}${pinMark}
+            <button class="btn-icon more-btn">${DOTS_SVG}</button>
+          `;
+          div.onclick = () => {
+            if (ctx === 'search') {
+              item.open = true;
+              searchQuery = '';
+              document.getElementById('sidebarSearch').value = '';
+            } else if (ctx === 'pinned') item.pinOpen = !item.pinOpen;
+            else item.open = !item.open;
+            updateUI();
+            saveState();
+          };
+          const mBtn = div.querySelector('.more-btn');
+          mBtn.onclick = (e) => {
+            e.stopPropagation();
+            const rect = mBtn.getBoundingClientRect();
+            showContextMenu(item.id, 'folder', rect.left, rect.top);
+          };
+          container.appendChild(div);
+
+          if (isOpen && ctx !== 'search') {
+            if (!item.children) item.children = [];
+            renderItemList(item.children, container, depth + 1, ctx);
+
+            const addDiv = document.createElement('button');
+            addDiv.className = 'folder-add-page-btn';
+            addDiv.style.paddingLeft = (32 + depth * 16) + 'px';
+            addDiv.textContent = '+ Add Page';
+            addDiv.onclick = (e) => {
+              e.stopPropagation();
+              addNewPage(item.id);
+            };
+            container.appendChild(addDiv);
+          }
+        } else {
+          const div = document.createElement('div');
+          div.className = `page-item ${item.id === currentPageId ? 'active' : ''}`;
+          div.style.paddingLeft = (12 + depth * 16) + 'px';
+          div.innerHTML = `
+            <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(item.name)}</span>
+            ${subHtml}${pinMark}
+            <button class="btn-icon more-btn">${DOTS_SVG}</button>
+          `;
+          div.onclick = () => switchPage(item.id);
+          const mBtn = div.querySelector('.more-btn');
+          mBtn.onclick = (e) => {
+            e.stopPropagation();
+            const rect = mBtn.getBoundingClientRect();
+            showContextMenu(item.id, 'page', rect.left, rect.top);
+          };
+          container.appendChild(div);
+        }
+      });
+    }
+
+    function collectPinned(list) {
+      let out = [];
+      list.forEach(it => {
+        if (it.pinned) out.push(it);
+        if (it.type === 'folder' && it.children) out = out.concat(collectPinned(it.children));
+      });
+      return out;
+    }
+    function collectSearch(list, q) {
+      let out = [];
+      list.forEach(it => {
+        if ((it.name || '').toLowerCase().includes(q)) out.push(it);
+        if (it.type === 'folder' && it.children) out = out.concat(collectSearch(it.children, q));
+      });
+      return out;
+    }
+    function renderSidebarList() {
+      pagesList.innerHTML = '';
+      const q = searchQuery.trim().toLowerCase();
+      if (q) {
+        const results = collectSearch(pages, q);
+        if (!results.length) {
+          const empty = document.createElement('div');
+          empty.className = 'sidebar-empty';
+          empty.textContent = 'No matching pages or folders';
+          pagesList.appendChild(empty);
+        } else renderItemList(results, pagesList, 0, 'search');
+        return;
+      }
+      const pinned = collectPinned(pages);
+      if (pinned.length) {
+        const h1 = document.createElement('div');
+        h1.className = 'sidebar-header';
+        h1.textContent = 'Pinned';
+        pagesList.appendChild(h1);
+        renderItemList(pinned, pagesList, 0, 'pinned');
+        const h2 = document.createElement('div');
+        h2.className = 'sidebar-header sidebar-section-label';
+        h2.style.marginTop = '14px';
+        h2.textContent = 'All pages';
+        pagesList.appendChild(h2);
+      }
+      renderItemList(pages, pagesList, 0, 'tree');
+    }
+
+    function updateUI() {
+// Theme
+      document.documentElement.classList.toggle('dark-mode', isDarkMode);
+      document.body.classList.toggle('dark-mode', isDarkMode);
+      
+      // Sidebar
+      document.documentElement.classList.toggle('sb-open', isSidebarOpen);
+      document.getElementById('sidebar').classList.toggle('open', isSidebarOpen);
+      document.getElementById('sidebarToggle').classList.toggle('shifted', isSidebarOpen);
+      document.getElementById('appNameLabel').classList.toggle('show', isSidebarOpen);
+      document.getElementById('addMenuBtn').classList.toggle('show', isSidebarOpen);
+      if (!isSidebarOpen) {
+        document.getElementById('addMenuDropdown').classList.remove('show');
+      }
+      
+      // Page List
+      renderSidebarList();
+
+document.getElementById('wordCount').style.display = isCounterVisible ? '' : 'none';
+      document.getElementById('toolbar').style.display = isToolbarVisible ? '' : 'none';
+      document.getElementById('toggleCounterBtn').innerHTML = (isCounterVisible ? 'Hide Counter' : 'Show Counter') + ' <span class="menu-shortcut">Ctrl+Shift+Y</span>';
+document.getElementById('toggleToolbarBtn').innerHTML = (isToolbarVisible ? 'Hide Toolbar' : 'Show Toolbar') + ' <span class="menu-shortcut">Ctrl+Shift+L</span>';
+      const storageEl = document.getElementById('storageIndicator');
+      if (storageEl) storageEl.style.display = isStorageVisible ? '' : 'none';
+      document.getElementById('toggleStorageBtn').innerHTML = (isStorageVisible ? 'Hide Storage' : 'Show Storage') + ' <span class="menu-shortcut"></span>';
+editor.spellcheck = isSpellcheckEnabled;
+      document.getElementById('toggleSpellcheckBtn').innerHTML = (isSpellcheckEnabled ? 'Disable Spell Check' : 'Enable Spell Check') + ' <span class="menu-shortcut">Ctrl+Shift+S</span>';
+      const overlay = document.getElementById('night-light-overlay');
+      const slider = document.getElementById('nightLightSlider');
+      const toggle = document.getElementById('nightLightToggle');
+      slider.value = nightLightIntensity;
+      toggle.checked = isNightLightEnabled;
+      if (isNightLightEnabled) {
+        const alpha = (nightLightIntensity / 100) * 0.65;
+        overlay.style.background = `rgba(255, 147, 41, ${alpha})`;
+      } else {
+        overlay.style.background = 'transparent';
+      }
+
+      // Typeface
+      document.querySelectorAll('.typeface-option').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.face === editorTypeface);
+      });
+      const activeFace = document.querySelector(`.typeface-option[data-face="${editorTypeface}"]`);
+      const faceLabel = activeFace ? activeFace.dataset.label : 'Default';
+      const tfLabel = document.getElementById('typefaceCurrentLabel');
+      if (tfLabel) tfLabel.textContent = faceLabel + ' ›';
+      updateWordCount();
+    }
+
+    function switchPage(id) {
+      saveState();
+      currentPageId = id;
+      const p = getCurrentPage();
+editor.innerHTML = p ? p.content : '';
+if (editor.innerText.replace(/\u200B/g, '').trim() === '') {
+        editor.innerHTML = '';
+        currentFontSize = 16;
+        document.getElementById('fontSizeDisplay').textContent = 16;
+        editor.classList.add('placeholder');
+      }
+      const isEmpty = editor.innerText.replace(/\u200B/g, '').trim() === "";
+      editor.classList.toggle('placeholder', isEmpty);
+      // Scroll the main container to top when switching pages
+document.getElementById('main').scrollTop = 0;
+      updateUI();
+      initHistory();
+      refreshFind(false);
+    }
+
+    function showContextMenu(id, type, x, y) {
+      contextItemId = id;
+      const item = findItemById(pages, id);
+      const menu = document.getElementById('pageContextMenu');
+      menu.dataset.itemType = type;
+      document.getElementById('pinItemBtn').textContent = item && item.pinned ? 'Unpin' : 'Pin';
+      document.getElementById('colorFolderBtn').style.display = type === 'folder' ? '' : 'none';
+      document.getElementById('colorPopover').classList.remove('show');
+      menu.classList.add('show');
+      const w = menu.offsetWidth, h = menu.offsetHeight;
+      menu.style.left = `${Math.max(8, Math.min(x + 20, window.innerWidth - w - 8))}px`;
+      menu.style.top = `${Math.max(8, Math.min(y, window.innerHeight - h - 8))}px`;
+    }
+
+    // Events
+    document.getElementById('sidebarToggle').onclick = () => {
+      isSidebarOpen = !isSidebarOpen;
+      try { localStorage.setItem('nb_sidebar', isSidebarOpen ? '1' : '0'); } catch(e) {}
+      updateUI();
+      saveState();
+    };
+
+    document.getElementById('appNameLabel').onclick = () => {
+      location.reload();
+    };
+
+    document.getElementById('addMenuBtn').onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('addMenuDropdown').classList.toggle('show');
+    };
+
+    document.getElementById('newPageMenuBtn').onclick = () => {
+      document.getElementById('addMenuDropdown').classList.remove('show');
+      addNewPage();
+    };
+
+    document.getElementById('newFolderMenuBtn').onclick = () => {
+      document.getElementById('addMenuDropdown').classList.remove('show');
+      addNewFolder();
+    };
+
+    function addNewPage(parentFolderId) {
+      const newPage = {
+        id: Utils.generateUUID(),
+        type: 'page',
+        name: `Page ${pageCounter++}`,
+        content: '',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      if (parentFolderId) {
+        const folder = findItemById(pages, parentFolderId);
+        folder.children = folder.children || [];
+        folder.children.push(newPage);
+        folder.open = true;
+        touchFolder(folder);
+      } else {
+        pages.push(newPage);
+      }
+      switchPage(newPage.id);
+    }
+
+    function addNewFolder() {
+      const newFolder = {
+        id: Utils.generateUUID(),
+        type: 'folder',
+        name: `Folder ${folderCounter++}`,
+        open: true,
+        children: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      pages.push(newFolder);
+      updateUI();
+      saveState();
+    }
+
+    document.getElementById('copyBtn').onclick = () => {
+      const text = editor.innerText;
+      const el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast('Copied to clipboard');
+    };
+
+
+    document.getElementById('menuToggle').onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('menuDropdown').classList.toggle('show');
+    };
+
+    // Download button context menu
+    let downloadContextMenu = document.getElementById('downloadContextMenu');
+    
+    document.getElementById('downloadBtn').onclick = (e) => {
+      e.stopPropagation();
+      const rect = e.currentTarget.getBoundingClientRect();
+      downloadContextMenu.style.left = `${rect.right - 200}px`;
+      downloadContextMenu.style.top = `${rect.bottom + 5}px`;
+      downloadContextMenu.classList.toggle('show');
+    };
+    
+    // Download as Text
+    document.getElementById('downloadTxtBtn').onclick = () => {
+      const content = editor.innerText;
+      const pageName = getCurrentPage().name;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${pageName}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded "${pageName}.txt"`);
+      downloadContextMenu.classList.remove('show');
+    };
+    
+    // Download as Markdown
+    document.getElementById('downloadMdBtn').onclick = () => {
+      const content = editor.innerText;
+      const pageName = getCurrentPage().name;
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${pageName}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded "${pageName}.md"`);
+      downloadContextMenu.classList.remove('show');
+    };
+
+
+    // Download as RTF
+    document.getElementById('downloadRtfBtn').onclick = () => {
+      const pageName = getCurrentPage().name;
+      const html = editor.innerHTML;
+
+      // Convert basic HTML to RTF
+      const div = document.createElement('div');
+      div.innerHTML = html;
+
+      let rtf = '{\\rtf1\\ansi\\deff0\n';
+      rtf += '{\\fonttbl{\\f0 Times New Roman;}}\n';
+      rtf += '{\\colortbl;\\red0\\green0\\blue0;}\n';
+
+      function nodeToRtf(node) {
+        if (node.nodeType === 3) {
+          return node.textContent
+            .replace(/\\/g, '\\\\')
+            .replace(/\{/g, '\\{')
+            .replace(/\}/g, '\\}')
+            .replace(/\n/g, '\\par\n');
+        }
+        let out = '';
+        const tag = node.nodeName.toLowerCase();
+        const style = node.style || {};
+        let prefix = '', suffix = '';
+
+        if (tag === 'b' || tag === 'strong') { prefix += '\\b '; suffix = '\\b0 ' + suffix; }
+        if (tag === 'i' || tag === 'em') { prefix += '\\i '; suffix = '\\i0 ' + suffix; }
+        if (tag === 'u') { prefix += '\\ul '; suffix = '\\ulnone ' + suffix; }
+        if (tag === 's' || tag === 'strike') { prefix += '\\strike '; suffix = '\\strike0 ' + suffix; }
+        if (tag === 'p' || tag === 'div' || tag === 'br') { suffix += '\\par\n'; }
+        if (tag === 'li') { prefix += '\\bullet\\tab '; suffix += '\\par\n'; }
+
+        if (style.fontSize) {
+          const pt = Math.round(parseFloat(style.fontSize) * 1.333);
+          prefix += `\\fs${pt * 2} `;
+        }
+
+        out += prefix;
+        node.childNodes.forEach(child => { out += nodeToRtf(child); });
+        out += suffix;
+        return out;
+      }
+
+      div.childNodes.forEach(child => { rtf += nodeToRtf(child); });
+      rtf += '}';
+
+      const blob = new Blob([rtf], { type: 'application/rtf' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${pageName}.rtf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded "${pageName}.rtf"`);
+      downloadContextMenu.classList.remove('show');
+    };
+
+    // Download as HTML
+    document.getElementById('downloadHtmlBtn').onclick = () => {
+      const pageName = getCurrentPage().name;
+      const content = editor.innerHTML;
+      const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${pageName}</title>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 40px;
+      color: #18181b;
+    }
+  </style>
+</head>
+<body>
+${content}
+</body>
+</html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${pageName}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded "${pageName}.html"`);
+      downloadContextMenu.classList.remove('show');
+    };
+
+    // Share Page: system share sheet when available, otherwise copy the text
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (_) { /* fall through to the legacy method */ }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+      document.body.appendChild(ta);
+      ta.select();
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (_) {}
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    document.getElementById('shareBtn').onclick = async () => {
+      const page = getCurrentPage();
+      const title = (page && page.name) || 'Untitled';
+      const body = (editor.innerText || '').replace(/\u200B/g, '').trim();
+      if (!body) {
+        showToast('Nothing to share yet');
+        return;
+      }
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text: body });
+          return;
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;   // person closed the share sheet
+          // share sheet blocked or failed: fall back to copying
+        }
+      }
+      const ok = await copyText(`${title}\n\n${body}`);
+      showToast(ok ? 'Page copied to clipboard' : 'Couldn\u2019t share or copy this page');
+    };
+
+    // Export Backup (JSON)
+    document.getElementById('exportBackupBtn').onclick = async () => {
+      await saveNow();
+      const exportData = {
+        pages,
+        currentPageId,
+        isDarkMode,
+        exportDate: new Date().toISOString()
+      };
+      const jsonStr = JSON.stringify(exportData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `notebook_backup_${new Date().toISOString().slice(0,19)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Backup exported successfully');
+      downloadContextMenu.classList.remove('show');
+    };
+    
+    // Import Backup (JSON)
+    document.getElementById('importBackupBtn').onclick = () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          try {
+            const importedData = JSON.parse(event.target.result);
+            if (importedData.pages && Array.isArray(importedData.pages)) {
+              pages = importedData.pages;
+              migratePages();
+              const flat = flattenPages(pages);
+              currentPageId = importedData.currentPageId && findItemById(pages, importedData.currentPageId)
+                ? importedData.currentPageId
+                : (flat.length ? flat[0].id : null);
+              isDarkMode = importedData.isDarkMode || false;
+
+              const curP = getCurrentPage();
+              editor.innerHTML = curP ? curP.content : '';
+              histories.clear();
+              initHistory();
+              updateUI();
+              await saveNow();
+              showToast('Backup imported successfully');
+            } else {
+              showToast('Invalid backup file format');
+            }
+          } catch (err) {
+            showToast('Error importing backup');
+            console.error(err);
+          }
+          downloadContextMenu.classList.remove('show');
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    };
+
+function toggleTheme() {
+      isDarkMode = !isDarkMode;
+      try { localStorage.setItem('nb_dark', isDarkMode ? '1' : '0'); } catch(e) {}
+      updateUI();
+      saveState();
+    }
+
+    document.getElementById('darkModeBtn').onclick = toggleTheme;
+
+document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+        e.preventDefault();
+        toggleToolbar();
+      }
+    });
+
+    function toggleSpellcheck() {
+      isSpellcheckEnabled = !isSpellcheckEnabled;
+      updateUI();
+      saveState();
+    }
+
+    document.getElementById('toggleSpellcheckBtn').onclick = () => {
+      toggleSpellcheck();
+      document.getElementById('menuDropdown').classList.remove('show');
+    };
+
+document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'S') {
+        e.preventDefault();
+        toggleSpellcheck();
+      }
+    });
+
+    function toggleNightLight() {
+      isNightLightEnabled = !isNightLightEnabled;
+      updateUI();
+      saveState();
+    }
+
+    document.getElementById('nightLightToggle').addEventListener('change', (e) => {
+      e.stopPropagation();
+      isNightLightEnabled = e.target.checked;
+      updateUI();
+      saveState();
+    });
+    document.getElementById('nightLightRow').addEventListener('click', (e) => e.stopPropagation());
+
+    document.getElementById('nightLightSlider').addEventListener('input', (e) => {
+      e.stopPropagation();
+      nightLightIntensity = parseInt(e.target.value);
+      updateUI();
+      saveState();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'N') {
+        e.preventDefault();
+        toggleNightLight();
+      }
+    });
+
+    // Typeface picker
+    function applyTypeface(face) {
+      document.querySelectorAll('.typeface-option').forEach(b => {
+        if (b.dataset.face !== 'default') editor.classList.remove('font-' + b.dataset.face);
+      });
+      if (face && face !== 'default') editor.classList.add('font-' + face);
+    }
+
+    document.getElementById('typefaceBtn').onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('menuMainView').style.display = 'none';
+      document.getElementById('menuTypefaceView').style.display = 'block';
+    };
+
+    document.getElementById('typefaceBackBtn').onclick = (e) => {
+      e.stopPropagation();
+      document.getElementById('menuTypefaceView').style.display = 'none';
+      document.getElementById('menuMainView').style.display = 'block';
+    };
+
+    document.querySelectorAll('.typeface-option').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        editorTypeface = btn.dataset.face;
+        applyTypeface(editorTypeface);
+        updateUI();
+        saveState();
+      };
+    });
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    function updateFullscreenBtn() {
+      document.getElementById('fullscreenBtn').innerHTML = (document.fullscreenElement ? 'Exit Full Screen' : 'Full Screen') + ' <span class="menu-shortcut">Ctrl+Shift+F</span>';
+    }
+
+    document.getElementById('fullscreenBtn').onclick = () => {
+      toggleFullscreen();
+      document.getElementById('menuDropdown').classList.remove('show');
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
+
+document.addEventListener('fullscreenchange', updateFullscreenBtn);
+
+// Storage Indicator
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 KB';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
+
+const STORAGE_ICON = `<svg viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><path d="M33,6.69h0c-.18-3.41-9.47-4.33-15-4.33S3,3.29,3,6.78V29.37c0,3.49,9.43,4.43,15,4.43s15-.93,15-4.43V6.78s0,0,0,0S33,6.7,33,6.69Zm-2,7.56c-.33.86-5.06,2.45-13,2.45A37.45,37.45,0,0,1,7,15.34v2.08A43.32,43.32,0,0,0,18,18.7c4,0,9.93-.48,13-2v5.17c-.33.86-5.06,2.45-13,2.45A37.45,37.45,0,0,1,7,22.92V25a43.32,43.32,0,0,0,11,1.28c4,0,9.93-.48,13-2v5.1c-.35.86-5.08,2.45-13,2.45S5.3,30.2,5,29.37V6.82C5.3,6,10,4.36,18,4.36c7.77,0,12.46,1.53,13,2.37-.52.87-5.21,2.39-13,2.39A37.6,37.6,0,0,1,7,7.76V9.85a43.53,43.53,0,0,0,11,1.27c4,0,9.93-.48,13-2Z"/><rect x="0" y="0" width="36" height="36" fill-opacity="0"/></svg>`;
+
+    async function updateStorageIndicator() {
+      const el = document.getElementById('storageIndicator');
+      const textEl = document.getElementById('storageText');
+      if (!el || !textEl) return;
+
+      // Inject icon once if not already present
+      if (!el.querySelector('svg')) {
+        el.insertAdjacentHTML('afterbegin', STORAGE_ICON);
+      }
+
+      if (!navigator.storage || !navigator.storage.estimate) {
+        textEl.textContent = 'Storage unavailable';
+        return;
+      }
+      try {
+        const { usage, quota } = await navigator.storage.estimate();
+        const used = formatBytes(usage || 0);
+        const left = formatBytes((quota || 0) - (usage || 0));
+        textEl.textContent = `${used} used · ${left} left`;
+        el.title = `Total quota: ${formatBytes(quota || 0)}` + (storagePersisted ? ' \u00b7 Protected from automatic cleanup' : '');
+      } catch(e) {
+        textEl.textContent = 'Storage: error';
+      }
+    }
+
+    // Refresh storage display every 8 seconds
+    setInterval(updateStorageIndicator, 8000);
+
+    function toggleCounter() {
+      isCounterVisible = !isCounterVisible;
+      updateUI();
+      saveState();
+    }
+
+function toggleToolbar() {
+      isToolbarVisible = !isToolbarVisible;
+      updateUI();
+      saveState();
+    }
+
+    function toggleStorage() {
+      isStorageVisible = !isStorageVisible;
+      updateUI();
+      saveState();
+    }
+
+    document.getElementById('toggleStorageBtn').onclick = () => {
+      toggleStorage();
+      document.getElementById('menuDropdown').classList.remove('show');
+    };
+
+    document.getElementById('toggleCounterBtn').onclick = () => {
+      toggleCounter();
+      document.getElementById('menuDropdown').classList.remove('show');
+    };
+
+    document.getElementById('toggleToolbarBtn').onclick = () => {
+      toggleToolbar();
+      document.getElementById('menuDropdown').classList.remove('show');
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'Y') {
+        e.preventDefault();
+        toggleCounter();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+        e.preventDefault();
+        toggleToolbar();
+      }
+    });
+
+    // ── APP MODAL (replaces native alert / confirm / prompt) ─────────
+    const appModal = (() => {
+      const overlay = document.getElementById('appModalOverlay');
+      const titleEl = document.getElementById('appModalTitle');
+      const msgEl   = document.getElementById('appModalMessage');
+      const input   = document.getElementById('appModalInput');
+      const okBtn   = document.getElementById('appModalOk');
+      const cancelBtn = document.getElementById('appModalCancel');
+      let done = null;
+
+      function close(result) {
+        if (!done) return;
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+        const cb = done; done = null;
+        cb(result);
+      }
+
+      // opts: { title, message, confirmText, cancelText (null = no cancel button), danger, input: { value, placeholder } }
+      function open(opts) {
+        if (done) close(null);
+        titleEl.textContent = opts.title || '';
+        msgEl.textContent = opts.message || '';
+        msgEl.style.display = opts.message ? '' : 'none';
+        okBtn.textContent = opts.confirmText || 'OK';
+        okBtn.className = 'app-modal-btn ' + (opts.danger ? 'danger' : 'primary');
+        cancelBtn.textContent = opts.cancelText || 'Cancel';
+        cancelBtn.style.display = opts.cancelText === null ? 'none' : '';
+        const hasInput = !!opts.input;
+        input.style.display = hasInput ? '' : 'none';
+        if (hasInput) {
+          input.value = opts.input.value || '';
+          input.placeholder = opts.input.placeholder || '';
+        }
+        const validate = () => { okBtn.disabled = hasInput && input.value.trim() === ''; };
+        input.oninput = validate;
+        validate();
+
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden', 'false');
+        setTimeout(() => {
+          if (hasInput) { input.focus(); input.select(); } else { okBtn.focus(); }
+        }, 30);
+
+        return new Promise(resolve => {
+          done = resolve;
+          okBtn.onclick = () => { if (!okBtn.disabled) close(hasInput ? input.value.trim() : true); };
+          cancelBtn.onclick = () => close(hasInput ? null : false);
+          overlay.onmousedown = (e) => { if (e.target === overlay) close(hasInput ? null : false); };
+          overlay.onkeydown = (e) => {
+            e.stopPropagation();
+            if (e.key === 'Escape') { e.preventDefault(); close(hasInput ? null : false); }
+            else if (e.key === 'Enter' && e.target !== cancelBtn) { e.preventDefault(); okBtn.click(); }
+            else if (e.key === 'Tab') {
+              const f = [input, cancelBtn, okBtn].filter(el => el.style.display !== 'none' && !el.disabled);
+              if (!f.length) return;
+              const i = f.indexOf(document.activeElement);
+              e.preventDefault();
+              f[(i + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus();
+            }
+          };
+        });
+      }
+
+      return {
+        alert:   (title, message) => open({ title, message, cancelText: null }).then(() => undefined),
+        confirm: (title, message, confirmText, danger) => open({ title, message, confirmText, danger }),
+        prompt:  (title, value, confirmText, placeholder) => open({ title, confirmText, input: { value, placeholder } })
+      };
+    })();
+    // ── END APP MODAL ───────────────────────────────────────────────
+
+    document.getElementById('renamePageBtn').onclick = async () => {
+      const id = contextItemId;
+      const item = findItemById(pages, id);
+      if (!item) return;
+      const name = await appModal.prompt(
+        item.type === 'folder' ? 'Rename folder' : 'Rename page',
+        item.name, 'Rename', 'Name'
+      );
+      const target = findItemById(pages, id);
+      if (name && target) {
+        target.name = name;
+        if (target.type === 'folder') touchFolder(target);
+        updateUI();
+        saveState();
+      }
+    };
+
+    document.getElementById('deletePageBtn').onclick = async () => {
+      const id = contextItemId;
+      const item = findItemById(pages, id);
+      if (!item) return;
+      const isFolder = item.type === 'folder';
+      const totalPages = flattenPages(pages).length;
+      const pagesInItem = isFolder ? flattenPages(item.children || []).length : 1;
+      if (!isFolder && totalPages <= 1) return; // must keep at least one page
+      if (isFolder && totalPages - pagesInItem < 1) {
+        await appModal.alert('Can\u2019t delete this folder', 'At least one page must remain in your notebook.');
+        return;
+      }
+      const ok = await appModal.confirm(
+        `Delete \u201C${item.name}\u201D?`,
+        isFolder ? 'This folder and everything inside it will be permanently deleted.' : 'This page will be permanently deleted.',
+        'Delete', true
+      );
+      if (ok) {
+        const parentFolder = findParentFolder(pages, id, null);
+        const list = findParentList(pages, id) || pages;
+        const idx = list.findIndex(i => i.id === id);
+        if (idx !== -1) list.splice(idx, 1);
+        touchFolder(parentFolder);
+        if (!findItemById(pages, currentPageId)) {
+          const remaining = flattenPages(pages);
+          currentPageId = remaining.length ? remaining[0].id : null;
+        }
+        updateUI();
+        saveState();
+        if (currentPageId) switchPage(currentPageId);
+      }
+    };
+
+    // ── Pin / Info / Color ──────────────────────────────────────────
+    document.getElementById('pinItemBtn').onclick = () => {
+      const item = findItemById(pages, contextItemId);
+      if (!item) return;
+      item.pinned = !item.pinned;
+      updateUI();
+      saveState();
+      showToast(item.pinned ? 'Pinned' : 'Unpinned');
+    };
+
+    const infoOverlay = document.getElementById('infoModalOverlay');
+    function closeInfo() { infoOverlay.classList.remove('show'); infoOverlay.setAttribute('aria-hidden', 'true'); }
+    function fmtDate(ts) {
+      if (!ts) return '—';
+      return new Date(ts).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    }
+    function statsFromHtml(html) {
+      const d = document.createElement('div');
+      d.style.cssText = 'position:fixed;left:-99999px;top:0;width:800px;white-space:pre-wrap;';
+      d.innerHTML = html || '';
+      document.body.appendChild(d);
+      const text = d.innerText || '';
+      document.body.removeChild(d);
+      return countText(text);
+    }
+    function showItemInfo(id) {
+      const item = findItemById(pages, id);
+      if (!item) return;
+      let rows;
+      if (item.type === 'folder') {
+        rows = [
+          ['Name', item.name],
+          ['Created', fmtDate(item.createdAt)],
+          ['Last edited', fmtDate(item.updatedAt)],
+          ['Pages', String(flattenPages(item.children || []).length)]
+        ];
+      } else {
+        let st;
+        if (id === currentPageId) { captureEditor(); st = countText(editor.innerText || ''); }
+        else st = statsFromHtml(item.content);
+        rows = [
+          ['Name', item.name],
+          ['Words', String(st.words)],
+          ['Characters', String(st.chars)],
+          ['Created', fmtDate(item.createdAt)],
+          ['Last edited', fmtDate(item.updatedAt)]
+        ];
+        const path = folderPath(id);
+        if (path.length) rows.push(['Folder', path.join(' / ')]);
+      }
+      document.getElementById('infoModalTitle').textContent = item.type === 'folder' ? 'Folder info' : 'Page info';
+      const body = document.getElementById('infoModalBody');
+      body.innerHTML = '';
+      rows.forEach(([l, v]) => {
+        const row = document.createElement('div');
+        row.className = 'info-row';
+        const a = document.createElement('span'); a.className = 'info-label'; a.textContent = l;
+        const b = document.createElement('span'); b.className = 'info-value'; b.textContent = v;
+        row.appendChild(a); row.appendChild(b);
+        body.appendChild(row);
+      });
+      infoOverlay.classList.add('show');
+      infoOverlay.setAttribute('aria-hidden', 'false');
+      setTimeout(() => document.getElementById('infoModalClose').focus(), 30);
+    }
+    document.getElementById('infoItemBtn').onclick = () => showItemInfo(contextItemId);
+    document.getElementById('infoModalClose').onclick = closeInfo;
+    infoOverlay.onmousedown = (e) => { if (e.target === infoOverlay) closeInfo(); };
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && infoOverlay.classList.contains('show')) closeInfo(); });
+
+    const colorPopover = document.getElementById('colorPopover');
+    colorPopover.onclick = (e) => e.stopPropagation();
+    document.getElementById('colorFolderBtn').onclick = (e) => {
+      e.stopPropagation();
+      const item = findItemById(pages, contextItemId);
+      if (!item) return;
+      const menu = document.getElementById('pageContextMenu');
+      const mr = menu.getBoundingClientRect();
+      const br = e.currentTarget.getBoundingClientRect();
+      menu.classList.remove('show');
+      colorPopover.querySelectorAll('.swatch').forEach(s => s.classList.toggle('selected', s.dataset.color === item.color));
+      colorPopover.classList.add('show');
+      const pw = colorPopover.offsetWidth, ph = colorPopover.offsetHeight;
+      let left = mr.right + 6;
+      if (left + pw > window.innerWidth - 8) left = Math.max(8, mr.left - pw - 6);
+      const top = Math.max(8, Math.min(br.top - 8, window.innerHeight - ph - 8));
+      colorPopover.style.left = left + 'px';
+      colorPopover.style.top = top + 'px';
+    };
+    colorPopover.querySelectorAll('.swatch').forEach(s => {
+      s.onclick = (e) => {
+        e.stopPropagation();
+        const item = findItemById(pages, contextItemId);
+        if (item) { item.color = s.dataset.color; updateUI(); saveState(); }
+        colorPopover.classList.remove('show');
+      };
+    });
+    document.getElementById('removeColorBtn').onclick = (e) => {
+      e.stopPropagation();
+      const item = findItemById(pages, contextItemId);
+      if (item) { delete item.color; updateUI(); saveState(); }
+      colorPopover.classList.remove('show');
+    };
+
+    // Sidebar search
+    const sidebarSearch = document.getElementById('sidebarSearch');
+    sidebarSearch.addEventListener('input', () => { searchQuery = sidebarSearch.value; renderSidebarList(); });
+    sidebarSearch.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Escape') { sidebarSearch.value = ''; searchQuery = ''; renderSidebarList(); }
+    });
+
+// Keep the caret above the bottom toolbar while typing
+    function scrollCursorAboveToolbar() {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      const range = sel.getRangeAt(0).cloneRange();
+      range.collapse(true);
+      const rects = range.getClientRects();
+      if (!rects.length) return;
+      const caretRect = rects[0];
+
+      const toolbar = document.getElementById('toolbar');
+      if (!toolbar || toolbar.style.display === 'none') return;
+      const toolbarTop = toolbar.getBoundingClientRect().top;
+      const safeBottom = toolbarTop - 12; // 12 px breathing room above bar
+
+      if (caretRect.bottom > safeBottom) {
+        const main = document.getElementById('main');
+        main.scrollTop += (caretRect.bottom - safeBottom);
+      }
+    }
+
+    // Auto-hide scrollbar in the editor area — only visible while actively scrolling
+    (function setupScrollbarAutoHide() {
+      const mainEl = document.getElementById('main');
+      let hideTimer = null;
+      mainEl.addEventListener('scroll', () => {
+        mainEl.classList.add('scrolling');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          mainEl.classList.remove('scrolling');
+        }, 700);
+      }, { passive: true });
+    })();
+
+    editor.oninput = () => {
+      editor.classList.remove('placeholder');
+      markEdited();
+      updateWordCount();
+      saveState();
+      requestAnimationFrame(scrollCursorAboveToolbar);
+    };
+
+    editor.onblur = () => {
+      if (editor.innerText.trim() === "") editor.classList.add('placeholder');
+    };
+
+    window.onclick = () => {
+      document.getElementById('menuDropdown').classList.remove('show');
+      document.getElementById('pageContextMenu').classList.remove('show');
+      document.getElementById('downloadContextMenu').classList.remove('show');
+      document.getElementById('addMenuDropdown').classList.remove('show');
+      document.getElementById('colorPopover').classList.remove('show');
+      document.getElementById('menuTypefaceView').style.display = 'none';
+      document.getElementById('menuMainView').style.display = 'block';
+    };
+
+    // Init App
+    async function start() {
+      await initDB();
+      requestPersistence();
+      if (dbMode === 'memory') showToast('Storage unavailable. Changes won\u2019t be saved.');
+      const state = await loadState();
+      try { isSidebarOpen = localStorage.getItem('nb_sidebar') === '1'; } catch(e) {}
+if (state) {
+pages = state.pages || [];
+        if (migratePages()) needsMigrationSave = true;
+        const flat = flattenPages(pages);
+        currentPageId = (state.currentPageId && findItemById(pages, state.currentPageId))
+          ? state.currentPageId
+          : (flat.length ? flat[0].id : null);
+        isDarkMode = state.isDarkMode;
+isCounterVisible = state.isCounterVisible !== undefined ? state.isCounterVisible : true;
+        isToolbarVisible = state.isToolbarVisible !== undefined ? state.isToolbarVisible : true;
+        isSpellcheckEnabled = state.isSpellcheckEnabled !== undefined ? state.isSpellcheckEnabled : false;
+        isNightLightEnabled = state.isNightLightEnabled !== undefined ? state.isNightLightEnabled : false;
+        nightLightIntensity = state.nightLightIntensity !== undefined ? state.nightLightIntensity : 40;
+        isStorageVisible = state.isStorageVisible !== undefined ? state.isStorageVisible : true;
+        pageCounter = state.pageCounter !== undefined ? state.pageCounter : (flat.length + 1);
+        folderCounter = state.folderCounter !== undefined ? state.folderCounter : 1;
+        editorTypeface = state.editorTypeface !== undefined ? state.editorTypeface : 'default';
+        if (state.isSidebarOpen !== undefined) isSidebarOpen = !!state.isSidebarOpen;
+        try { localStorage.setItem('nb_sidebar', isSidebarOpen ? '1' : '0'); } catch(e) {}
+        try { localStorage.setItem('nb_dark', isDarkMode ? '1' : '0'); } catch(e) {}
+      } else {
+        const id = Utils.generateUUID();
+        pages = [{ id, type: 'page', name: 'Page 1', content: '', createdAt: Date.now(), updatedAt: Date.now() }];
+        currentPageId = id;
+        pageCounter = 2;
+      }
+      const curP = getCurrentPage();
+editor.innerHTML = curP ? curP.content : '';
+      applyTypeface(editorTypeface);
+      initHistory();
+      
+      // Ensure spacer doesn't get deleted when editor content changes
+      const spacer = document.querySelector('.editor-spacer');
+      if (spacer && spacer.parentNode === document.getElementById('main')) {
+        // Spacer already exists, do nothing
+      }
+      
+updateUI();
+      updateStorageIndicator();
+      if (needsMigrationSave) saveState();   // one-time upgrade to the per-page storage layout
+      requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.remove('no-anim')));
+    }
+
+// Font Size Control
+    let currentFontSize = 16;
+    let pendingFontSize = null;
+    const MIN_FONT = 1;
+    const MAX_FONT = 30;
+
+    // Text nodes that actually have selected characters, in document order.
+    function selectedTextNodes(range) {
+      const root = range.commonAncestorContainer;
+      const out = [];
+      const consider = (n) => {
+        let from = 0, to = n.nodeValue.length;
+        if (n === range.startContainer) from = range.startOffset;
+        if (n === range.endContainer) to = range.endOffset;
+        if (to > from) out.push({ node: n, from, to });
+      };
+      if (root.nodeType === 3) { consider(root); return out; }
+      const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (n) => range.intersectsNode(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT
+      });
+      let n;
+      while ((n = w.nextNode())) consider(n);
+      return out;
+    }
+
+    function selectionBaseSize() {
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount || sel.isCollapsed || !editor.contains(sel.anchorNode)) return null;
+      const first = selectedTextNodes(sel.getRangeAt(0))[0];
+      if (!first || !first.node.parentElement) return null;
+      const s = parseFloat(window.getComputedStyle(first.node.parentElement).fontSize);
+      return isNaN(s) ? null : Math.round(s);
+    }
+
+    function applyFontSize(size) {
+      currentFontSize = Math.min(MAX_FONT, Math.max(MIN_FONT, size));
+      document.getElementById('fontSizeDisplay').textContent = currentFontSize;
+      const px = currentFontSize + 'px';
+      editor.focus();
+
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0 && !sel.isCollapsed && editor.contains(sel.anchorNode)) {
+        const range = sel.getRangeAt(0);
+        const parts = selectedTextNodes(range);
+        const targets = [];
+        // Split off exactly the selected characters of each text node
+        parts.forEach(({ node, from, to }) => {
+          let n = node;
+          if (to < n.nodeValue.length) n.splitText(to);
+          if (from > 0) n = n.splitText(from);
+          targets.push(n);
+        });
+        // Size every selected text node directly, so older nested sizes can never win
+        targets.forEach((n) => {
+          const p = n.parentNode;
+          const onlySize = p !== editor && p.nodeName === 'SPAN' && p.childNodes.length === 1 &&
+                           /^\s*font-size:[^;]*;?\s*$/i.test(p.getAttribute('style') || '');
+          if (onlySize) {
+            p.style.fontSize = px;
+          } else {
+            const span = document.createElement('span');
+            span.style.fontSize = px;
+            p.insertBefore(span, n);
+            span.appendChild(n);
+          }
+        });
+        if (targets.length) {
+          const last = targets[targets.length - 1];
+          const nr = document.createRange();
+          nr.setStart(targets[0], 0);
+          nr.setEnd(last, last.nodeValue.length);
+          sel.removeAllRanges();
+          sel.addRange(nr);
+          markEdited();
+          recordHistory(null, true);
+        } else {
+          pendingFontSize = currentFontSize;
+        }
+      } else {
+        // No selection — just store size, apply on next keypress
+        pendingFontSize = currentFontSize;
+      }
+      saveState();
+    }
+
+    function detectFontSize() {
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0 || !editor.contains(sel.anchorNode)) return;
+      let size = selectionBaseSize();
+      if (size === null) {
+        const node = sel.anchorNode;
+        const el = node && node.nodeType === 3 ? node.parentElement : node;
+        if (el) size = Math.round(parseFloat(window.getComputedStyle(el).fontSize));
+      }
+      if (size !== null && !isNaN(size)) {
+        currentFontSize = size;
+        document.getElementById('fontSizeDisplay').textContent = size;
+      }
+    }
+
+    ['fontIncrBtn', 'fontDecrBtn'].forEach(id => {
+      document.getElementById(id).addEventListener('mousedown', (e) => e.preventDefault());
+    });
+    document.getElementById('fontIncrBtn').onclick = () => {
+      const base = selectionBaseSize();
+      applyFontSize((base !== null ? base : currentFontSize) + 1);
+    };
+    document.getElementById('fontDecrBtn').onclick = () => {
+      const base = selectionBaseSize();
+      applyFontSize((base !== null ? base : currentFontSize) - 1);
+    };
+
+    editor.addEventListener('keyup', detectFontSize);
+    editor.addEventListener('mouseup', detectFontSize);
+    document.addEventListener('selectionchange', detectFontSize);
+
+    // Re-check cursor position after any navigation key
+    editor.addEventListener('keyup', (e) => {
+      if (['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight',
+           'Enter', 'End', 'PageDown', 'Home', 'PageUp'].includes(e.key)) {
+        requestAnimationFrame(scrollCursorAboveToolbar);
+      }
+    });
+
+    editor.addEventListener('keydown', (e) => {
+      if (pendingFontSize === null) return;
+      if (e.key.length !== 1) return; // only printable characters
+      if (e.ctrlKey || e.metaKey || e.altKey) return; // let shortcuts (Ctrl+Z, Ctrl+B...) through
+      e.preventDefault();
+      const span = document.createElement('span');
+      span.style.fontSize = pendingFontSize + 'px';
+      span.textContent = e.key;
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) {
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(span);
+        range.setStartAfter(span);
+        range.setEndAfter(span);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+      pendingFontSize = null;
+      markEdited();
+      recordHistory(null, true);
+      saveState();
+    });
+
+editor.addEventListener('input', () => {
+      if (editor.innerText.trim() === '') {
+        editor.innerHTML = '';
+        currentFontSize = 16;
+        pendingFontSize = null;
+        document.getElementById('fontSizeDisplay').textContent = 16;
+        editor.classList.add('placeholder');
+      }
+    });
+
+
+
+    // ── UNDO / REDO ─────────────────────────────────────────────────
+    // Custom per-page history. Native undo can't track the font-size
+    // changes (they edit the DOM directly), so we snapshot the editor.
+    const histories = new Map();          // pageId -> { undo, redo, present, lastT, lastType, groupStart }
+    const HISTORY_LIMIT = 100;
+    const MERGE_TYPES = ['insertText', 'insertCompositionText', 'deleteContentBackward', 'deleteContentForward'];
+
+    function textOffset(node, off) {
+      const r = document.createRange();
+      r.selectNodeContents(editor);
+      try { r.setEnd(node, off); } catch (_) { return 0; }
+      return r.toString().length;
+    }
+    function getSelOffsets() {
+      const sel = window.getSelection();
+      if (!sel || !sel.rangeCount || !editor.contains(sel.anchorNode)) return null;
+      const r = sel.getRangeAt(0);
+      return { s: textOffset(r.startContainer, r.startOffset), e: textOffset(r.endContainer, r.endOffset) };
+    }
+    function locate(offset) {
+      const w = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+      let n = 0, t, last = null;
+      while ((t = w.nextNode())) {
+        last = t;
+        if (offset <= n + t.nodeValue.length) return { node: t, off: offset - n };
+        n += t.nodeValue.length;
+      }
+      return last ? { node: last, off: last.nodeValue.length } : { node: editor, off: 0 };
+    }
+    function setSelOffsets(o) {
+      const sel = window.getSelection();
+      const r = document.createRange();
+      if (!o) {
+        r.selectNodeContents(editor);
+        r.collapse(false);
+      } else {
+        const a = locate(o.s), b = locate(o.e);
+        r.setStart(a.node, a.off);
+        r.setEnd(b.node, b.off);
+      }
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+    function snapshot() { return { html: editor.innerHTML, sel: getSelOffsets() }; }
+    function curHistory() { return currentPageId ? histories.get(currentPageId) : null; }
+
+    function initHistory() {
+      if (!currentPageId) return;
+      let h = histories.get(currentPageId);
+      if (!h || h.present.html !== editor.innerHTML) {
+        h = { undo: [], redo: [], present: { html: editor.innerHTML, sel: null }, lastT: 0, lastType: null, groupStart: 0 };
+        histories.set(currentPageId, h);
+      }
+      h.lastType = null;
+      updateHistoryButtons();
+    }
+
+    function recordHistory(type, force) {
+      const h = curHistory();
+      if (!h) return;
+      const html = editor.innerHTML;
+      if (html === h.present.html) return;
+      const now = Date.now();
+      const merge = !force && h.undo.length && MERGE_TYPES.includes(type) &&
+                    type === h.lastType && now - h.lastT < 800 && now - h.groupStart < 2500;
+      if (!merge) {
+        h.undo.push(h.present);
+        if (h.undo.length > HISTORY_LIMIT) h.undo.shift();
+        h.groupStart = now;
+      }
+      h.present = { html, sel: getSelOffsets() };
+      h.redo = [];
+      h.lastT = now;
+      h.lastType = force ? null : type;
+      updateHistoryButtons();
+    }
+
+    function applySnapshot(snap) {
+      editor.innerHTML = snap.html;
+      pendingFontSize = null;
+      const isEmpty = editor.innerText.replace(/\u200B/g, '').trim() === '';
+      editor.classList.toggle('placeholder', isEmpty);
+      editor.focus();
+      setSelOffsets(snap.sel);
+      if (isEmpty) {
+        currentFontSize = 16;
+        document.getElementById('fontSizeDisplay').textContent = 16;
+      } else {
+        detectFontSize();
+      }
+      updateWordCount();
+      markEdited();
+      saveState();
+      refreshFind(false);
+      requestAnimationFrame(scrollCursorAboveToolbar);
+    }
+
+    function undoHistory() {
+      const h = curHistory();
+      if (!h || !h.undo.length) return;
+      h.redo.push(h.present);
+      h.present = h.undo.pop();
+      h.lastType = null;
+      applySnapshot(h.present);
+      updateHistoryButtons();
+    }
+    function redoHistory() {
+      const h = curHistory();
+      if (!h || !h.redo.length) return;
+      h.undo.push(h.present);
+      h.present = h.redo.pop();
+      h.lastType = null;
+      applySnapshot(h.present);
+      updateHistoryButtons();
+    }
+
+    function updateHistoryButtons() {
+      const h = curHistory();
+      document.getElementById('undoBtn').classList.toggle('is-disabled', !h || !h.undo.length);
+      document.getElementById('redoBtn').classList.toggle('is-disabled', !h || !h.redo.length);
+    }
+
+    // Toolbar buttons (mousedown is cancelled so the editor keeps focus and selection)
+    ['undoBtn', 'redoBtn'].forEach(id => {
+      document.getElementById(id).addEventListener('mousedown', (e) => e.preventDefault());
+    });
+    document.getElementById('undoBtn').addEventListener('click', undoHistory);
+    document.getElementById('redoBtn').addEventListener('click', redoHistory);
+
+    // Record every edit (typing, paste, cut, formatting commands, drag & drop...)
+    editor.addEventListener('input', (e) => recordHistory(e.inputType));
+    // Moving the caret ends the current typing group
+    editor.addEventListener('mousedown', () => { const h = curHistory(); if (h) h.lastType = null; });
+    editor.addEventListener('keyup', (e) => {
+      if (['ArrowDown','ArrowUp','ArrowLeft','ArrowRight','Home','End','PageUp','PageDown'].includes(e.key)) {
+        const h = curHistory(); if (h) h.lastType = null;
+      }
+    });
+
+    // Keyboard: Ctrl/Cmd+Z = undo, Ctrl/Cmd+Y or Ctrl/Cmd+Shift+Z = redo
+    editor.addEventListener('keydown', (e) => {
+      if (!(e.ctrlKey || e.metaKey) || e.altKey) return;
+      const k = e.key.toLowerCase();
+      if (k === 'z' && !e.shiftKey) { e.preventDefault(); undoHistory(); }
+      else if ((k === 'z' && e.shiftKey) || (k === 'y' && !e.shiftKey)) { e.preventDefault(); redoHistory(); }
+    });
+    // Browser-level undo/redo (context menu, mobile keyboards) goes through ours too
+    editor.addEventListener('beforeinput', (e) => {
+      if (e.inputType === 'historyUndo') { e.preventDefault(); undoHistory(); }
+      else if (e.inputType === 'historyRedo') { e.preventDefault(); redoHistory(); }
+    });
+    // ── END UNDO / REDO ─────────────────────────────────────────────
+
+    // ── FIND & REPLACE ──────────────────────────────────────────────
+    const findPanel = document.getElementById('findPanel');
+    const findInput = document.getElementById('findInput');
+    const replaceInput = document.getElementById('replaceInput');
+    const findCountEl = document.getElementById('findCount');
+    const findBtnEl = document.getElementById('findBtn');
+    const hlSupported = typeof CSS !== 'undefined' && CSS.highlights && typeof Highlight !== 'undefined';
+    let findRefreshTimer = null;
+
+    function isFindOpen() { return findPanel.classList.contains('show'); }
+    function clearFindHighlights() {
+      if (hlSupported) { CSS.highlights.delete('ft-find'); CSS.highlights.delete('ft-current'); }
+    }
+    // Case-insensitive search across the editor's text, spanning formatting boundaries
+    function collectMatches(q) {
+      const out = [];
+      if (!q) return out;
+      const nodes = [], starts = [];
+      let text = '';
+      const w = document.createTreeWalker(editor, NodeFilter.SHOW_TEXT);
+      let t;
+      while ((t = w.nextNode())) { nodes.push(t); starts.push(text.length); text += t.nodeValue; }
+      if (!nodes.length) return out;
+      const locateNode = (pos) => {
+        let lo = 0, hi = nodes.length - 1;
+        while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (starts[mid] <= pos) lo = mid; else hi = mid - 1; }
+        return lo;
+      };
+      const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        if (!m[0].length) { re.lastIndex++; continue; }
+        const a = locateNode(m.index);
+        const endPos = m.index + m[0].length;
+        const b = locateNode(endPos - 1);
+        const r = document.createRange();
+        r.setStart(nodes[a], m.index - starts[a]);
+        r.setEnd(nodes[b], endPos - starts[b]);
+        out.push(r);
+      }
+      return out;
+    }
+    function scrollToMatch(range) {
+      const r = range.getBoundingClientRect();
+      if (!r || (!r.width && !r.height)) return;
+      const main = document.getElementById('main');
+      const mr = main.getBoundingClientRect();
+      const target = main.scrollTop + (r.top - mr.top) - main.clientHeight / 2;
+      main.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+    }
+    function paintFind(scroll) {
+      clearFindHighlights();
+      if (!findMatches.length) { findCountEl.textContent = '0/0'; return; }
+      findCountEl.textContent = (findIdx + 1) + '/' + findMatches.length;
+      const cur = findMatches[findIdx];
+      if (hlSupported) {
+        CSS.highlights.set('ft-find', new Highlight(...findMatches));
+        const h = new Highlight(cur);
+        h.priority = 1;
+        CSS.highlights.set('ft-current', h);
+      } else if (scroll) {
+        editor.focus();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(cur.cloneRange());
+      }
+      if (scroll) scrollToMatch(cur);
+    }
+    function runFind(keepIdx, scroll) {
+      const q = findInput.value;
+      findLastQuery = q;
+      findMatches = collectMatches(q);
+      if (!findMatches.length) findIdx = -1;
+      else findIdx = keepIdx ? Math.min(Math.max(findIdx, 0), findMatches.length - 1) : 0;
+      paintFind(scroll);
+      if (q && !findMatches.length) showToast('No matches found');
+    }
+    function refreshFind(scroll) {
+      if (!isFindOpen() || !findLastQuery) return;
+      clearTimeout(findRefreshTimer);
+      findRefreshTimer = setTimeout(() => {
+        findInput.value === findLastQuery ? runFind(true, !!scroll) : null;
+        if (findInput.value !== findLastQuery) { /* user is mid-edit; wait for Find */ }
+      }, 120);
+    }
+    function stepFind(dir) {
+      if (findInput.value !== findLastQuery || !findMatches.length) { runFind(false, true); return; }
+      findIdx = (findIdx + dir + findMatches.length) % findMatches.length;
+      paintFind(true);
+    }
+    function replaceAllMatches() {
+      const q = findInput.value;
+      if (!q) { showToast('Type something to find first'); return; }
+      const ms = collectMatches(q);
+      if (!ms.length) { findLastQuery = q; findMatches = []; findIdx = -1; paintFind(false); showToast('No matches found'); return; }
+      const rep = replaceInput.value;
+      for (let i = ms.length - 1; i >= 0; i--) {
+        ms[i].deleteContents();
+        if (rep) ms[i].insertNode(document.createTextNode(rep));
+      }
+      const isEmpty = editor.innerText.replace(/\u200B/g, '').trim() === '';
+      editor.classList.toggle('placeholder', isEmpty);
+      updateWordCount();
+      markEdited();
+      recordHistory(null, true);
+      saveState();
+      showToast(`Replaced ${ms.length} ${ms.length === 1 ? 'match' : 'matches'}`);
+      runFind(false, false);
+    }
+    function openFind() {
+      findPanel.classList.add('show');
+      findBtnEl.classList.add('active');
+      const sel = window.getSelection();
+      if (sel && !sel.isCollapsed && editor.contains(sel.anchorNode)) {
+        const s = sel.toString();
+        if (s && s.indexOf('\n') === -1) findInput.value = s;
+      }
+      findInput.focus();
+      findInput.select();
+    }
+    function closeFind() {
+      findPanel.classList.remove('show');
+      findBtnEl.classList.remove('active');
+      clearFindHighlights();
+      findMatches = []; findIdx = -1; findLastQuery = '';
+      findCountEl.textContent = '0/0';
+    }
+    findBtnEl.addEventListener('click', (e) => { e.stopPropagation(); isFindOpen() ? closeFind() : openFind(); });
+    findPanel.addEventListener('click', (e) => e.stopPropagation());
+    document.getElementById('findGoBtn').onclick = () => runFind(false, true);
+    document.getElementById('findNextBtn').onclick = () => stepFind(1);
+    document.getElementById('findPrevBtn').onclick = () => stepFind(-1);
+    document.getElementById('findCloseBtn').onclick = closeFind;
+    document.getElementById('replaceGoBtn').onclick = replaceAllMatches;
+    findInput.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); findInput.value !== findLastQuery ? runFind(false, true) : stepFind(e.shiftKey ? -1 : 1); }
+      else if (e.key === 'Escape') closeFind();
+    });
+    replaceInput.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); replaceAllMatches(); }
+      else if (e.key === 'Escape') closeFind();
+    });
+    editor.addEventListener('input', () => refreshFind(false));
+    // ── END FIND & REPLACE ──────────────────────────────────────────
+
+    start();
+
+    // Custom Tooltips
+    const tooltip = document.getElementById('custom-tooltip');
+    document.querySelectorAll('[title]').forEach(el => {
+      const text = el.getAttribute('title');
+      el.removeAttribute('title');
+      el.dataset.tooltip = text;
+    });
+
+document.addEventListener('mouseover', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (!target) return;
+      tooltip.textContent = target.dataset.tooltip;
+      tooltip.classList.remove('tooltip-below');
+      const rect = target.getBoundingClientRect();
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      let x = rect.left + rect.width / 2 - tw / 2;
+      let y = rect.top - th - 8;
+      if (x < 8) x = 8;
+      if (x + tw > window.innerWidth - 8) x = window.innerWidth - tw - 8;
+      if (y < 8) {
+        y = rect.bottom + 8;
+        tooltip.classList.add('tooltip-below');
+      }
+      tooltip.style.left = x + 'px';
+      tooltip.style.top = y + 'px';
+      tooltip.style.opacity = '1';
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      if (!e.target.closest('[data-tooltip]')) return;
+      tooltip.style.opacity = '0';
+    });
+  })();
+</script>
+</body>
+</html>
